@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://blacksync.ai/sitemap.xml

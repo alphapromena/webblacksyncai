@@ -1,0 +1,94 @@
+import { Shield, Globe, Lock, FileCheck } from "lucide-react";
+
+const footerLinks = {
+  Product: [
+    { label: "How it Works", href: "#how-it-works" },
+    { label: "Pricing", href: "#pricing" },
+    { label: "Integrations", href: "#integrations" },
+    { label: "Changelog", href: "#" },
+    { label: "API Docs", href: "#" },
+  ],
+  Company: [
+    { label: "About", href: "#" },
+    { label: "Blog", href: "#" },
+    { label: "Careers", href: "#" },
+    { label: "Contact", href: "#enterprise" },
+    { label: "Affiliates", href: "#" },
+  ],
+  Legal: [
+    { label: "Privacy Policy", href: "/privacy" },
+    { label: "Terms of Service", href: "/terms" },
+    { label: "Security", href: "#" },
+    { label: "DPA", href: "#" },
+    { label: "Cookie Settings", href: "#" },
+  ],
+};
+
+const trustBadges = [
+  { label: "SOC 2", icon: Shield },
+  { label: "HIPAA Ready", icon: FileCheck },
+  { label: "GDPR", icon: Globe },
+  { label: "ISO 27001", icon: Lock },
+];
+
+export function Footer() {
+  return (
+    <footer data-testid="footer" className="border-t border-border/50 bg-card/30">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          <div className="col-span-2 md:col-span-1">
+            <a href="#" className="flex items-center gap-2 mb-4" data-testid="link-footer-home">
+              <div className="w-7 h-7 rounded-md bg-gradient-to-br from-primary to-amber-800 dark:to-amber-600 flex items-center justify-center">
+                <span className="text-white font-bold text-xs">B</span>
+              </div>
+              <span className="font-bold text-base tracking-tight">BlackSync</span>
+            </a>
+            <p className="text-sm text-muted-foreground leading-relaxed mb-3" data-testid="text-footer-tagline">
+              AI outbound agents for sales teams.
+            </p>
+            <p className="text-xs text-muted-foreground" data-testid="text-footer-availability">
+              Available in US, Australia, Canada, UAE
+            </p>
+          </div>
+
+          {Object.entries(footerLinks).map(([category, links]) => (
+            <div key={category}>
+              <h4 className="text-sm font-semibold mb-3">{category}</h4>
+              <ul className="space-y-2">
+                {links.map((link) => (
+                  <li key={link.label}>
+                    <a
+                      href={link.href}
+                      data-testid={`link-footer-${link.label.toLowerCase().replace(/\s+/g, "-")}`}
+                      className="text-sm text-muted-foreground transition-colors"
+                    >
+                      {link.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-12 pt-8 border-t border-border/50 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p className="text-xs text-muted-foreground" data-testid="text-footer-copyright">
+            &copy; 2026 BlackSync AI. All rights reserved.
+          </p>
+          <div className="flex items-center gap-4 flex-wrap" data-testid="footer-trust-badges">
+            {trustBadges.map((badge) => (
+              <div
+                key={badge.label}
+                className="flex items-center gap-1.5 text-xs text-muted-foreground"
+                data-testid={`badge-footer-${badge.label.toLowerCase().replace(/\s+/g, "-")}`}
+              >
+                <badge.icon className="w-3.5 h-3.5" />
+                <span>{badge.label}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+}

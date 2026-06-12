@@ -1,0 +1,554 @@
+import { Navbar } from "@/components/navbar";
+import { Footer } from "@/components/footer";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { motion } from "framer-motion";
+import { useRoute, Link } from "wouter";
+import {
+  Home,
+  Building2,
+  Shield,
+  Wrench,
+  Heart,
+  Car,
+  KeyRound,
+  ArrowRight,
+  CheckCircle2,
+  Phone,
+  Calendar,
+  Clock,
+  TrendingUp,
+} from "lucide-react";
+import { useState, useEffect } from "react";
+import { useMutation } from "@tanstack/react-query";
+import { apiRequest } from "@/lib/queryClient";
+import { useToast } from "@/hooks/use-toast";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import { User, Users } from "lucide-react";
+
+type Industry = {
+  slug: string;
+  name: string;
+  icon: any;
+  headline: string;
+  subhead: string;
+  painPoints: string[];
+  outcomes: { label: string; value: string; icon: any }[];
+  integrations: string[];
+  testimonial: { quote: string; name: string; role: string };
+};
+
+const INDUSTRIES: Record<string, Industry> = {
+  "real-estate": {
+    slug: "real-estate",
+    name: "Real Estate",
+    icon: Home,
+    headline: "A full ISA team — built, trained, and ready to dial for you.",
+    subhead:
+      "BlackSync replaces your entire ISA bench with specialized AI agents for FSBOs, Expireds, Just Listed/Just Sold circle prospecting, speed-to-lead, sphere reactivation, and open house follow-up. Every lead called before your competition even sees the notification.",
+    painPoints: [
+      "FSBO and Expired lists going stale while you're on appointments",
+      "Zillow and Realtor.com leads getting called by 5 agents in 4 minutes — and you're #6",
+      "ISAs costing $4K–$6K/mo, quitting every 6 months, and ghosting half the list",
+      "Old database sitting on 2,000+ past clients nobody has touched in a year",
+      "Open house sign-ins never get a real follow-up call",
+      "Hot buyer leads coming in at 9pm and Saturdays — and nobody's dialing",
+    ],
+    outcomes: [
+      { label: "Speed to lead", value: "11s", icon: Clock },
+      { label: "Lead-to-appt rate", value: "3.4x", icon: TrendingUp },
+      { label: "Cost vs human ISA", value: "−92%", icon: Phone },
+    ],
+    integrations: [
+      "Follow Up Boss",
+      "Sierra Interactive",
+      "kvCORE",
+      "BoomTown",
+      "Lofty (Chime)",
+      "Zillow Premier",
+      "Realtor.com",
+      "Vulcan7",
+      "REDX",
+      "Espresso Agent",
+      "Calendly",
+    ],
+    testimonial: {
+      quote:
+        "We replaced two ISAs with BlackSync. It works FSBOs and Expireds all morning, hits speed-to-lead the second a Zillow inquiry comes in, and books showings straight onto our calendars. 8 appointments our first week.",
+      name: "Marcus K.",
+      role: "Broker/Owner, Atlanta GA",
+    },
+  },
+  mortgage: {
+    slug: "mortgage",
+    name: "Mortgage & Lending",
+    icon: Building2,
+    headline: "Call every refi lead before they shop another lender.",
+    subhead:
+      "BlackSync's AI qualifies LendingTree, Zillow Home Loans, and webform leads instantly — pre-screens credit, intent, and loan amount before booking the call.",
+    painPoints: [
+      "$80+ LendingTree leads going to whoever calls first",
+      "Loan officers buried in unqualified leads",
+      "Refi opportunities lost to slow callbacks",
+      "Compliance-heavy scripts hard to train humans on",
+    ],
+    outcomes: [
+      { label: "Avg response time", value: "11s", icon: Clock },
+      { label: "Qualified-rate lift", value: "+42%", icon: TrendingUp },
+      { label: "Cost per qualified lead", value: "−68%", icon: Phone },
+    ],
+    integrations: ["LendingTree", "Encompass", "Salesforce", "HubSpot", "Calendly", "Zapier"],
+    testimonial: {
+      quote:
+        "We were missing 60% of leads after-hours. Now BlackSync calls them all and books them on my calendar before I wake up.",
+      name: "James R.",
+      role: "Loan Officer, Phoenix AZ",
+    },
+  },
+  insurance: {
+    slug: "insurance",
+    name: "Insurance",
+    icon: Shield,
+    headline: "Quote 10x more policies without hiring another agent.",
+    subhead:
+      "BlackSync's AI calls auto, home, life, and commercial leads within seconds, gathers underwriting info, and books the call with your licensed agent.",
+    painPoints: [
+      "Lead vendors selling the same leads to 5 agencies",
+      "CSRs spending all day on unqualified callers",
+      "Renewal opportunities slipping through cracks",
+      "Multi-state campaigns hard to scale",
+    ],
+    outcomes: [
+      { label: "Avg response time", value: "11s", icon: Clock },
+      { label: "Quote-to-bind lift", value: "+38%", icon: TrendingUp },
+      { label: "Languages supported", value: "40+", icon: Phone },
+    ],
+    integrations: ["Applied", "EZLynx", "HubSpot", "Salesforce", "Zapier", "Twilio"],
+    testimonial: {
+      quote:
+        "Our AI agent calls every quote request, qualifies it, and books my CSR's calendar. Closing rate went up, payroll went down.",
+      name: "Sarah T.",
+      role: "Agency Owner, Austin TX",
+    },
+  },
+  "home-services": {
+    slug: "home-services",
+    name: "Home Services",
+    icon: Wrench,
+    headline: "Book every service call. Even at 2am on a Sunday.",
+    subhead:
+      "BlackSync's AI answers and dials inbound + outbound leads 24/7 — qualifies job type, urgency, and location, then books trucks to the calendar.",
+    painPoints: [
+      "Missing $500+ jobs because nobody answers after hours",
+      "Yelp/Google leads going to whoever calls back first",
+      "Dispatchers double-booked or idle",
+      "Seasonal spikes (HVAC, plumbing) impossible to staff",
+    ],
+    outcomes: [
+      { label: "24/7 coverage", value: "100%", icon: Clock },
+      { label: "Booking-rate lift", value: "+47%", icon: TrendingUp },
+      { label: "Avg response time", value: "11s", icon: Phone },
+    ],
+    integrations: ["ServiceTitan", "Housecall Pro", "Jobber", "Google LSA", "Zapier", "Twilio"],
+    testimonial: {
+      quote:
+        "We doubled bookings without adding a single dispatcher. BlackSync just works — nights, weekends, holidays.",
+      name: "Marcus K.",
+      role: "Operations Lead, Atlanta GA",
+    },
+  },
+  healthcare: {
+    slug: "healthcare",
+    name: "Healthcare",
+    icon: Heart,
+    headline: "HIPAA-ready AI that fills your schedule.",
+    subhead:
+      "BlackSync's AI handles appointment scheduling, recall outreach, and lead intake — fully HIPAA-aligned and integrated with your EHR.",
+    painPoints: [
+      "Front-desk staff buried in phone tag",
+      "Recall outreach falling through the cracks",
+      "No-show rates eating revenue",
+      "Spanish-speaking patients underserved",
+    ],
+    outcomes: [
+      { label: "Recall response", value: "11s", icon: Clock },
+      { label: "Schedule fill rate", value: "+34%", icon: TrendingUp },
+      { label: "Languages", value: "40+", icon: Phone },
+    ],
+    integrations: ["Athena", "Epic", "DrChrono", "Calendly", "Twilio", "Zapier"],
+    testimonial: {
+      quote:
+        "Our front desk got their day back. BlackSync handles recalls, confirmations, and new patient intake.",
+      name: "Sarah T.",
+      role: "Practice Manager, Austin TX",
+    },
+  },
+  "auto-pc": {
+    slug: "auto-pc",
+    name: "Auto & P&C Insurance",
+    icon: Car,
+    headline: "Quote every auto lead before it shops the competition.",
+    subhead:
+      "BlackSync's AI dials auto and P&C leads in seconds, captures full underwriting info, and books the bind call with your licensed producer.",
+    painPoints: [
+      "Multi-state auto leads going stale",
+      "Commercial P&C leads need fast, knowledgeable responses",
+      "Comp shoppers won by whoever calls first",
+      "After-hours leads completely lost",
+    ],
+    outcomes: [
+      { label: "Avg response time", value: "11s", icon: Clock },
+      { label: "Bind-rate lift", value: "+29%", icon: TrendingUp },
+      { label: "Coverage", value: "24/7", icon: Phone },
+    ],
+    integrations: ["EZLynx", "Applied", "PL Rating", "HubSpot", "Salesforce", "Zapier"],
+    testimonial: {
+      quote:
+        "We bind more policies per producer now because BlackSync filters every lead before it hits their desk.",
+      name: "James R.",
+      role: "Agency Principal, Phoenix AZ",
+    },
+  },
+  "property-management": {
+    slug: "property-management",
+    name: "Property Management",
+    icon: KeyRound,
+    headline: "Fill vacancies and triage maintenance — without a leasing team.",
+    subhead:
+      "BlackSync's AI qualifies prospective tenants, schedules showings, and triages maintenance calls 24/7 across your entire portfolio.",
+    painPoints: [
+      "Leasing agents stretched across too many properties",
+      "Maintenance calls flooding the front desk after hours",
+      "Tour no-shows wasting time",
+      "Spanish-speaking residents underserved",
+    ],
+    outcomes: [
+      { label: "Lead response", value: "11s", icon: Clock },
+      { label: "Showing-rate lift", value: "+41%", icon: TrendingUp },
+      { label: "Coverage", value: "24/7", icon: Phone },
+    ],
+    integrations: ["AppFolio", "Buildium", "Yardi", "Rentvine", "Calendly", "Zapier"],
+    testimonial: {
+      quote:
+        "Maintenance triage alone paid for BlackSync three times over. Vacancies fill faster too.",
+      name: "Marcus K.",
+      role: "Portfolio Manager, Atlanta GA",
+    },
+  },
+};
+
+export default function IndustryPage() {
+  const [, params] = useRoute<{ slug: string }>("/industry/:slug");
+  const slug = params?.slug ?? "real-estate";
+  const industry = INDUSTRIES[slug] ?? INDUSTRIES["real-estate"];
+
+  const [email, setEmail] = useState("");
+  const [qualifyOpen, setQualifyOpen] = useState(false);
+  const { toast } = useToast();
+
+  useEffect(() => {
+    if (slug === "real-estate") {
+      const t = setTimeout(() => setQualifyOpen(true), 600);
+      return () => clearTimeout(t);
+    }
+  }, [slug]);
+
+  function handleQualify(choice: "solo" | "team") {
+    setQualifyOpen(false);
+    if (choice === "solo") {
+      window.location.href = "https://buy.stripe.com/fZudR2g325kJgRh3i0eUU0v";
+    } else {
+      const el = document.getElementById("enterprise");
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth" });
+      } else {
+        window.location.href = "/#enterprise";
+      }
+    }
+  }
+
+  const mutation = useMutation({
+    mutationFn: async (emailValue: string) => {
+      await apiRequest("POST", "/api/leads", {
+        name: emailValue.split("@")[0],
+        email: emailValue,
+        company: industry.name,
+      });
+    },
+    onSuccess: () => {
+      toast({ title: "You're in!", description: "We'll be in touch shortly." });
+      setEmail("");
+    },
+    onError: () => {
+      toast({
+        title: "Something went wrong",
+        description: "Please try again.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!email || !email.includes("@")) {
+      toast({
+        title: "Invalid email",
+        description: "Please enter a valid work email.",
+        variant: "destructive",
+      });
+      return;
+    }
+    mutation.mutate(email);
+  }
+
+  const Icon = industry.icon;
+
+  return (
+    <div className="min-h-screen bg-background flex flex-col" data-testid={`page-industry-${slug}`}>
+      <Navbar />
+
+      <Dialog open={qualifyOpen} onOpenChange={setQualifyOpen}>
+        <DialogContent className="sm:max-w-md" data-testid="dialog-qualify">
+          <DialogHeader>
+            <DialogTitle className="text-2xl">Let's tailor your plan</DialogTitle>
+            <DialogDescription className="text-base">
+              Which best describes you? We'll send you to the right starting point.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2">
+            <button
+              type="button"
+              onClick={() => handleQualify("solo")}
+              className="flex flex-col items-center justify-center text-center gap-2 p-5 rounded-xl border border-border bg-card hover-elevate active-elevate-2 transition-all"
+              data-testid="button-qualify-solo"
+            >
+              <div className="w-10 h-10 rounded-full bg-primary/15 text-primary flex items-center justify-center">
+                <User className="w-5 h-5" />
+              </div>
+              <div className="font-semibold">Solo Agent</div>
+              <div className="text-xs text-muted-foreground leading-snug">
+                I run my own book of business
+              </div>
+              <div className="text-xs font-semibold text-primary mt-1">Start at $98/mo →</div>
+            </button>
+            <button
+              type="button"
+              onClick={() => handleQualify("team")}
+              className="flex flex-col items-center justify-center text-center gap-2 p-5 rounded-xl border-2 border-primary bg-primary/5 hover-elevate active-elevate-2 transition-all"
+              data-testid="button-qualify-team"
+            >
+              <div className="w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center">
+                <Users className="w-5 h-5" />
+              </div>
+              <div className="font-semibold">Team Owner / Broker</div>
+              <div className="text-xs text-muted-foreground leading-snug">
+                I lead a team or brokerage
+              </div>
+              <div className="text-xs font-semibold text-primary mt-1">Get a custom plan →</div>
+            </button>
+          </div>
+          <p className="text-[11px] text-muted-foreground text-center mt-2">
+            Not sure? Pick Team Owner — we'll talk it through with you.
+          </p>
+        </DialogContent>
+      </Dialog>
+
+
+      {/* Hero */}
+      <section className="relative pt-28 pb-16 md:pt-36 md:pb-24 hero-gradient overflow-hidden">
+        <div className="absolute inset-0 grid-bg opacity-40 dark:opacity-20" />
+        <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-zinc-900 text-white mb-5"
+            data-testid="badge-industry-name"
+          >
+            <Icon className="w-3.5 h-3.5" />
+            <span className="text-xs font-semibold">{industry.name}</span>
+          </motion.div>
+
+          <motion.h1
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.08 }}
+            className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight leading-[1.05] mb-5"
+            data-testid="text-industry-headline"
+          >
+            {industry.headline.split("—")[0]}
+            {industry.headline.includes("—") && (
+              <>
+                <br className="hidden md:block" />
+                <span className="gradient-text italic font-serif">— {industry.headline.split("—")[1]}</span>
+              </>
+            )}
+          </motion.h1>
+
+          <motion.p
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.16 }}
+            className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto mb-8 leading-relaxed"
+          >
+            {industry.subhead}
+          </motion.p>
+
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.24 }}
+            className="flex flex-col items-center gap-3"
+          >
+            <form
+              onSubmit={handleSubmit}
+              className="flex flex-col sm:flex-row items-center justify-center gap-2 w-full max-w-md"
+            >
+              <Input
+                type="email"
+                placeholder="Enter your work email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="flex-1"
+                data-testid="input-industry-email"
+              />
+              <Button size="lg" type="submit" disabled={mutation.isPending} data-testid="button-industry-cta">
+                Get My Plan <ArrowRight className="w-4 h-4 ml-2" />
+              </Button>
+            </form>
+            <p className="text-xs text-muted-foreground">
+              Built for {industry.name} teams · 11s response time · Cancel anytime
+            </p>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Outcomes */}
+      <section className="py-12 md:py-16">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {industry.outcomes.map((o, i) => (
+              <motion.div
+                key={o.label}
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: i * 0.08 }}
+                className="p-6 rounded-2xl border border-border bg-card text-center hover-elevate"
+                data-testid={`outcome-${o.label.toLowerCase().replace(/\s/g, "-")}`}
+              >
+                <div className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-primary/15 text-primary mb-3">
+                  <o.icon className="w-5 h-5" />
+                </div>
+                <div className="text-4xl font-bold tracking-tight gradient-text mb-1">{o.value}</div>
+                <div className="text-sm text-muted-foreground">{o.label}</div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Pain points */}
+      <section className="py-12 md:py-16 bg-muted/30">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid md:grid-cols-2 gap-10 items-center">
+            <div>
+              <Badge variant="secondary" className="mb-3">
+                Why teams switch
+              </Badge>
+              <h2 className="text-3xl md:text-4xl font-bold tracking-tight leading-tight mb-4">
+                Stop losing leads to{" "}
+                <span className="gradient-text">slow follow-up.</span>
+              </h2>
+              <p className="text-muted-foreground leading-relaxed">
+                Every {industry.name.toLowerCase()} team we work with comes to us
+                with the same problems. BlackSync solves them on day one.
+              </p>
+            </div>
+            <ul className="space-y-3">
+              {industry.painPoints.map((p) => (
+                <li
+                  key={p}
+                  className="flex items-start gap-3 p-3 rounded-lg bg-card border border-border"
+                >
+                  <CheckCircle2 className="w-5 h-5 text-primary shrink-0 mt-0.5" />
+                  <span className="text-sm">{p}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      {/* Integrations */}
+      <section className="py-12 md:py-16">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <Badge variant="secondary" className="mb-3">
+            Native integrations
+          </Badge>
+          <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-3">
+            Plugs into the tools{" "}
+            <span className="gradient-text">{industry.name} runs on.</span>
+          </h2>
+          <p className="text-muted-foreground mb-8 max-w-xl mx-auto">
+            Two-way sync. Leads in, appointments out, everything logged.
+          </p>
+          <div className="flex flex-wrap justify-center gap-2">
+            {industry.integrations.map((name) => (
+              <div
+                key={name}
+                className="px-4 py-2 rounded-full bg-card border border-border text-sm font-medium"
+              >
+                {name}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonial */}
+      <section className="py-12 md:py-16 bg-muted/30">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <p className="text-2xl md:text-3xl font-medium leading-snug mb-6 text-foreground">
+            "{industry.testimonial.quote}"
+          </p>
+          <p className="text-sm font-semibold">{industry.testimonial.name}</p>
+          <p className="text-sm text-muted-foreground">{industry.testimonial.role}</p>
+        </div>
+      </section>
+
+      {/* Final CTA */}
+      <section className="py-16 md:py-24">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-4 leading-[1.1]">
+            Ready to scale {industry.name}?
+          </h2>
+          <p className="text-muted-foreground text-lg mb-8">
+            Get a custom plan built for your team in under 24 hours.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <Link href="/#enterprise">
+              <Button size="lg" data-testid="button-industry-talk">
+                Talk to Sales <ArrowRight className="w-4 h-4 ml-2" />
+              </Button>
+            </Link>
+            <Link href="/pricing">
+              <Button size="lg" variant="outline" data-testid="button-industry-pricing">
+                See pricing
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      <Footer />
+    </div>
+  );
+}

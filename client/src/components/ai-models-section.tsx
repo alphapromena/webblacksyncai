@@ -1,0 +1,127 @@
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { motion } from "framer-motion";
+import { ArrowRight, Globe } from "lucide-react";
+import { Link } from "wouter";
+
+const models = [
+  { name: "GPT-5", provider: "OpenAI", short: "GPT-5", color: "bg-emerald-500", premium: true },
+  { name: "GPT-5.1", provider: "OpenAI", short: "GPT-5.1", color: "bg-emerald-500", premium: true },
+  { name: "GPT-5.2", provider: "OpenAI", short: "GPT-5.2", color: "bg-emerald-500", premium: true },
+  { name: "GPT-5 Mini", provider: "OpenAI", short: "5-Mini", color: "bg-emerald-500", premium: false },
+  { name: "GPT-5 Nano", provider: "OpenAI", short: "5-Nano", color: "bg-emerald-500", premium: false },
+  { name: "GPT-4.1", provider: "OpenAI", short: "GPT-4.1", color: "bg-emerald-500", premium: true },
+  { name: "GPT-4.1 Mini", provider: "OpenAI", short: "4.1-Mini", color: "bg-emerald-500", premium: false },
+  { name: "GPT-4.1 Nano", provider: "OpenAI", short: "4.1-Nano", color: "bg-emerald-500", premium: false },
+  { name: "GPT-4o Realtime", provider: "OpenAI", short: "4o-RT", color: "bg-emerald-500", premium: true },
+  { name: "GPT-4o Mini Realtime", provider: "OpenAI", short: "4o-Mini", color: "bg-emerald-500", premium: false },
+  { name: "Claude 4.5 Sonnet", provider: "Anthropic", short: "Sonnet 4.5", color: "bg-orange-500", premium: true },
+  { name: "Claude 4.5 Haiku", provider: "Anthropic", short: "Haiku 4.5", color: "bg-orange-500", premium: false },
+  { name: "Gemini 3.0 Flash", provider: "Google", short: "Gemini 3.0", color: "bg-blue-500", premium: false },
+  { name: "Gemini 2.5 Flash", provider: "Google", short: "Gemini 2.5", color: "bg-blue-500", premium: false },
+  { name: "Gemini 2.5 Flash Lite", provider: "Google", short: "2.5 Lite", color: "bg-blue-500", premium: false },
+];
+
+export function AIModelsSection() {
+  return (
+    <section
+      id="ai-models"
+      data-testid="section-ai-models"
+      className="py-16 md:py-20 relative"
+    >
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="grid md:grid-cols-2 gap-10 items-center border border-border bg-card p-6 md:p-10 rounded-3xl"
+        >
+          {/* LEFT */}
+          <div>
+            <p
+              className="uppercase text-xs font-semibold tracking-widest text-primary"
+              data-testid="text-ai-models-eyebrow"
+            >
+              AI Models
+            </p>
+            <h2
+              className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mt-3 mb-5 leading-[1.05]"
+              data-testid="text-ai-models-headline"
+            >
+              Powered by the world's most{" "}
+              <span className="gradient-text">advanced AI</span>
+            </h2>
+            <p
+              className="text-muted-foreground text-base md:text-lg leading-relaxed mb-6 max-w-lg"
+              data-testid="text-ai-models-subhead"
+            >
+              Choose your model. Every plan includes access to GPT-5, Claude,
+              Gemini, and more — you pick what runs your agent.
+            </p>
+
+            <div className="flex flex-wrap gap-3 mb-6">
+              <Link href="/pricing">
+                <Button size="lg" data-testid="button-ai-models-pricing">
+                  See Pricing
+                  <ArrowRight className="w-4 h-4 ml-2" />
+                </Button>
+              </Link>
+              <a href="#enterprise">
+                <Button
+                  variant="outline"
+                  size="lg"
+                  data-testid="button-ai-models-enterprise"
+                >
+                  Talk to Sales →
+                </Button>
+              </a>
+            </div>
+
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <Globe className="w-4 h-4" />
+              <p data-testid="text-languages-supported">
+                40+ languages including English, Spanish, Arabic, Mandarin, French, Portuguese & Hindi.
+              </p>
+            </div>
+          </div>
+
+          {/* RIGHT */}
+          <div className="grid grid-cols-3 sm:grid-cols-5 gap-3">
+            {models.map((model, idx) => (
+              <motion.div
+                key={model.name}
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.3, delay: idx * 0.03 }}
+                className="relative aspect-square p-2 bg-background border-2 border-border flex flex-col items-center justify-center text-center group hover:border-primary transition-colors duration-300 cursor-default"
+                style={{
+                  clipPath:
+                    "polygon(25% 0%, 75% 0%, 100% 25%, 100% 75%, 75% 100%, 25% 100%, 0% 75%, 0% 25%)",
+                }}
+                data-testid={`tile-model-${idx}`}
+                title={`${model.name} · ${model.provider}`}
+              >
+                <div
+                  className={`w-2 h-2 rounded-full ${model.color} mb-1`}
+                />
+                <span className="text-[10px] sm:text-[11px] font-semibold leading-tight text-foreground">
+                  {model.short}
+                </span>
+                {model.premium && (
+                  <Badge
+                    variant="secondary"
+                    className="mt-1 text-[8px] px-1.5 py-0 h-3.5 leading-none"
+                  >
+                    PRO
+                  </Badge>
+                )}
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  );
+}
