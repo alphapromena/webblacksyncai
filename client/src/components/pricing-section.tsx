@@ -1,8 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { motion } from "framer-motion";
 import { Check, Zap, CreditCard, Puzzle } from "lucide-react";
+import { SectionHeading, Reveal } from "@/components/ui/section";
 
 const plans = [
   {
@@ -131,65 +131,64 @@ export function PricingSection() {
     <section
       id="pricing"
       data-testid="section-pricing"
-      className="py-16 md:py-20 relative"
+      className="py-20 md:py-28 relative"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.4 }}
-          className="text-center mb-10"
-        >
-          <Badge variant="secondary" className="mb-3" data-testid="badge-pricing">
-            Pricing
-          </Badge>
-          <h2 className="text-2xl md:text-3xl font-bold tracking-tight mb-3">
-            Less Than a <span className="gradient-text">Part-Time ISA</span>
-          </h2>
-          <p className="text-muted-foreground text-sm md:text-base max-w-lg mx-auto">
-            No hidden fees. Cancel anytime. Phone number from $3.50/mo.
-          </p>
-        </motion.div>
+        <div data-testid="badge-pricing">
+          <SectionHeading
+            eyebrow="Pricing"
+            title={
+              <>
+                Less Than a <span className="text-accent-grad">Part-Time ISA</span>
+              </>
+            }
+            lead="No hidden fees. Cancel anytime. Phone number from $3.50/mo."
+          />
+        </div>
 
-        <div className="grid md:grid-cols-3 gap-5 max-w-5xl mx-auto">
+        <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto mt-16 items-stretch">
           {plans.map((plan, index) => (
-            <motion.div
+            <Reveal
               key={plan.name}
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: index * 0.08 }}
+              delay={index * 0.08}
+              className={`h-full ${plan.popular ? "md:scale-[1.03] md:z-10" : ""}`}
             >
               <Card
-                className={`relative h-full ${plan.popular ? "card-glow border-primary/30" : ""}`}
+                className={`relative h-full rounded-2xl border bg-card shadow-sm hover:shadow-md transition-shadow ${
+                  plan.popular ? "card-glow border-primary/40 shadow-lg" : ""
+                }`}
                 data-testid={`card-pricing-${index}`}
               >
                 {plan.popular && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                    <Badge data-testid="badge-most-popular">Most Popular</Badge>
+                  <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 z-20">
+                    <Badge
+                      className="shadow-md font-mono text-[10px] uppercase tracking-wider px-3 py-1"
+                      data-testid="badge-most-popular"
+                    >
+                      Most Popular
+                    </Badge>
                   </div>
                 )}
-                <CardContent className="p-5 md:p-6 flex flex-col h-full">
-                  <div className="mb-5">
-                    <div className="flex items-center gap-2 flex-wrap mb-1">
+                <CardContent className="p-6 md:p-7 flex flex-col h-full">
+                  <div className="mb-6">
+                    <div className="flex items-center gap-2 flex-wrap mb-3">
                       <h3
-                        className="text-base font-semibold"
+                        className="font-display text-lg font-semibold tracking-tight"
                         data-testid={`text-plan-name-${index}`}
                       >
                         {plan.name}
                       </h3>
                       <Badge
                         variant="outline"
-                        className="text-xs"
+                        className="font-mono text-[10px] uppercase tracking-wider"
                         data-testid={`badge-plan-tag-${index}`}
                       >
                         {plan.tag}
                       </Badge>
                     </div>
-                    <div className="flex items-baseline gap-2 mt-2 flex-wrap">
+                    <div className="flex items-baseline gap-2 flex-wrap">
                       <span
-                        className="text-3xl font-bold"
+                        className="font-display text-4xl md:text-5xl font-semibold tracking-tight"
                         data-testid={`text-plan-price-${index}`}
                       >
                         {plan.price}
@@ -210,23 +209,26 @@ export function PricingSection() {
                     </div>
                     {plan.discountNote && (
                       <p
-                        className="text-xs text-primary font-medium mt-1.5"
+                        className="text-xs text-primary font-medium mt-2"
                         data-testid={`text-plan-discount-${index}`}
                       >
                         {plan.discountNote}
                       </p>
                     )}
                   </div>
-                  <ul className="flex-1 space-y-2.5 mb-6">
+                  <ul className="flex-1 space-y-3 mb-7">
                     {plan.features.map((f) => (
-                      <li key={f} className="flex items-start gap-2 text-sm">
-                        <Check className="w-3.5 h-3.5 text-emerald-500 mt-0.5 shrink-0" />
-                        <span className="text-sm">{f}</span>
+                      <li key={f} className="flex items-start gap-2.5 text-sm">
+                        <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary/10">
+                          <Check className="w-3 h-3 text-primary" />
+                        </span>
+                        <span className="text-foreground/90">{f}</span>
                       </li>
                     ))}
                   </ul>
                   <Button
                     className="w-full"
+                    size="lg"
                     variant={plan.popular ? "default" : "outline"}
                     onClick={() => handlePlanClick(plan)}
                     data-testid={`button-pricing-${plan.name.toLowerCase().replace(/\s/g, "-")}`}
@@ -235,110 +237,106 @@ export function PricingSection() {
                   </Button>
                 </CardContent>
               </Card>
-            </motion.div>
+            </Reveal>
           ))}
         </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.4, delay: 0.2 }}
-          className="mt-16 max-w-5xl mx-auto"
-        >
-          <div className="text-center mb-8">
-            <h3
-              className="text-xl md:text-2xl font-bold tracking-tight mb-2"
-              data-testid="text-credits-title"
-            >
-              Call Credits
-            </h3>
-            <p className="text-muted-foreground text-sm md:text-base max-w-lg mx-auto">
-              Credits power your outbound calls. Buy once, use anytime. Unused
-              credits roll over.
-            </p>
+        <div className="mt-24 max-w-5xl mx-auto">
+          <div data-testid="text-credits-title">
+            <SectionHeading
+              eyebrow="Call Credits"
+              title="Credits That Power Your Calls"
+              lead="Credits power your outbound calls. Buy once, use anytime. Unused credits roll over."
+            />
           </div>
 
-          <div className="grid sm:grid-cols-3 gap-4 max-w-3xl mx-auto">
+          <div className="grid sm:grid-cols-3 gap-5 max-w-3xl mx-auto mt-12">
             {credits.map((credit, index) => (
-              <Card
-                key={credit.amount}
-                className={`relative ${credit.highlight ? "card-glow border-primary/30" : ""}`}
-                data-testid={`card-credit-${index}`}
-              >
-                {credit.highlight && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                    <Badge data-testid="badge-best-value">Best Value</Badge>
-                  </div>
-                )}
-                <CardContent className="p-5 text-center">
-                  <p
-                    className="font-semibold text-base mb-1"
-                    data-testid={`text-credit-amount-${index}`}
-                  >
-                    {credit.amount}
-                  </p>
-                  <p
-                    className="text-2xl font-bold mb-1"
-                    data-testid={`text-credit-price-${index}`}
-                  >
-                    {credit.price}
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    {credit.detail}
-                  </p>
-                </CardContent>
-              </Card>
+              <Reveal key={credit.amount} delay={index * 0.08} className="h-full">
+                <Card
+                  className={`relative h-full rounded-2xl border bg-card shadow-sm hover:shadow-md transition-shadow ${
+                    credit.highlight ? "card-glow border-primary/40" : ""
+                  }`}
+                  data-testid={`card-credit-${index}`}
+                >
+                  {credit.highlight && (
+                    <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 z-10">
+                      <Badge
+                        className="shadow-md font-mono text-[10px] uppercase tracking-wider px-3 py-1"
+                        data-testid="badge-best-value"
+                      >
+                        Best Value
+                      </Badge>
+                    </div>
+                  )}
+                  <CardContent className="p-6 text-center">
+                    <p
+                      className="font-mono text-xs uppercase tracking-wider text-muted-foreground mb-3"
+                      data-testid={`text-credit-amount-${index}`}
+                    >
+                      {credit.amount}
+                    </p>
+                    <p
+                      className="font-display text-3xl md:text-4xl font-semibold tracking-tight mb-2"
+                      data-testid={`text-credit-price-${index}`}
+                    >
+                      {credit.price}
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      {credit.detail}
+                    </p>
+                  </CardContent>
+                </Card>
+              </Reveal>
             ))}
           </div>
-        </motion.div>
+        </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.4, delay: 0.3 }}
-          className="mt-16 max-w-5xl mx-auto"
-        >
-          <div className="text-center mb-8">
-            <h3
-              className="text-xl md:text-2xl font-bold tracking-tight mb-2"
-              data-testid="text-addons-title"
-            >
-              Add-Ons
-            </h3>
+        <div className="mt-24 max-w-5xl mx-auto">
+          <div data-testid="text-addons-title">
+            <SectionHeading
+              eyebrow="Add-Ons"
+              title="Done-For-You Builds"
+            />
           </div>
 
-          <div className="grid sm:grid-cols-3 gap-4 max-w-4xl mx-auto">
+          <div className="grid sm:grid-cols-3 gap-5 max-w-4xl mx-auto mt-12">
             {addons.map((addon, index) => (
-              <Card key={addon.title} data-testid={`card-addon-${index}`}>
-                <CardContent className="p-5 flex flex-col h-full">
-                  <div className="flex items-center gap-2 mb-3">
-                    <addon.icon className="w-5 h-5 text-primary shrink-0" />
+              <Reveal key={addon.title} delay={index * 0.08} className="h-full">
+                <Card
+                  className="h-full rounded-2xl border bg-card shadow-sm hover:shadow-md transition-shadow"
+                  data-testid={`card-addon-${index}`}
+                >
+                  <CardContent className="p-6 flex flex-col h-full">
+                    <div className="mb-4">
+                      <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">
+                        <addon.icon className="w-5 h-5 text-primary shrink-0" />
+                      </span>
+                    </div>
                     <h4
-                      className="font-semibold text-sm"
+                      className="font-display text-base font-semibold tracking-tight mb-2"
                       data-testid={`text-addon-title-${index}`}
                     >
                       {addon.title}
                     </h4>
-                  </div>
-                  <p className="text-xs text-muted-foreground flex-1 mb-3">
-                    {addon.description}
-                  </p>
-                  <Badge
-                    variant="outline"
-                    className="self-start"
-                    data-testid={`badge-addon-pricing-${index}`}
-                  >
-                    {addon.pricing}
-                  </Badge>
-                </CardContent>
-              </Card>
+                    <p className="text-sm text-muted-foreground leading-relaxed flex-1 mb-4">
+                      {addon.description}
+                    </p>
+                    <Badge
+                      variant="outline"
+                      className="self-start font-mono text-[10px] uppercase tracking-wider"
+                      data-testid={`badge-addon-pricing-${index}`}
+                    >
+                      {addon.pricing}
+                    </Badge>
+                  </CardContent>
+                </Card>
+              </Reveal>
             ))}
           </div>
-        </motion.div>
+        </div>
 
-        <p className="text-xs text-muted-foreground text-center mt-8">
+        <p className="text-xs text-muted-foreground text-center mt-12">
           * Prices are in USD
         </p>
       </div>

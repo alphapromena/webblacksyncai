@@ -1,8 +1,8 @@
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { Eyebrow, Reveal } from "@/components/ui/section";
 import { motion } from "framer-motion";
 import { useRoute, Link } from "wouter";
 import {
@@ -317,7 +317,7 @@ export default function IndustryPage() {
       <Dialog open={qualifyOpen} onOpenChange={setQualifyOpen}>
         <DialogContent className="sm:max-w-md" data-testid="dialog-qualify">
           <DialogHeader>
-            <DialogTitle className="text-2xl">Let's tailor your plan</DialogTitle>
+            <DialogTitle className="font-display text-2xl font-semibold tracking-tight">Let's tailor your plan</DialogTitle>
             <DialogDescription className="text-base">
               Which best describes you? We'll send you to the right starting point.
             </DialogDescription>
@@ -326,10 +326,10 @@ export default function IndustryPage() {
             <button
               type="button"
               onClick={() => handleQualify("solo")}
-              className="flex flex-col items-center justify-center text-center gap-2 p-5 rounded-xl border border-border bg-card hover-elevate active-elevate-2 transition-all"
+              className="flex flex-col items-center justify-center text-center gap-2 p-5 rounded-xl border bg-card shadow-sm hover:shadow-md hover-elevate active-elevate-2 transition-all"
               data-testid="button-qualify-solo"
             >
-              <div className="w-10 h-10 rounded-full bg-primary/15 text-primary flex items-center justify-center">
+              <div className="w-11 h-11 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
                 <User className="w-5 h-5" />
               </div>
               <div className="font-semibold">Solo Agent</div>
@@ -341,10 +341,10 @@ export default function IndustryPage() {
             <button
               type="button"
               onClick={() => handleQualify("team")}
-              className="flex flex-col items-center justify-center text-center gap-2 p-5 rounded-xl border-2 border-primary bg-primary/5 hover-elevate active-elevate-2 transition-all"
+              className="flex flex-col items-center justify-center text-center gap-2 p-5 rounded-xl border-2 border-primary bg-primary/5 shadow-sm hover:shadow-md hover-elevate active-elevate-2 transition-all"
               data-testid="button-qualify-team"
             >
-              <div className="w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center">
+              <div className="w-11 h-11 rounded-xl bg-primary text-primary-foreground flex items-center justify-center">
                 <Users className="w-5 h-5" />
               </div>
               <div className="font-semibold">Team Owner / Broker</div>
@@ -369,25 +369,27 @@ export default function IndustryPage() {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
-            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-zinc-900 text-white mb-5"
+            className="inline-flex mb-6"
             data-testid="badge-industry-name"
           >
-            <Icon className="w-3.5 h-3.5" />
-            <span className="text-xs font-semibold">{industry.name}</span>
+            <Eyebrow>
+              <Icon className="w-3.5 h-3.5" />
+              {industry.name}
+            </Eyebrow>
           </motion.div>
 
           <motion.h1
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.08 }}
-            className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight leading-[1.05] mb-5"
+            className="font-display text-4xl sm:text-5xl md:text-6xl font-semibold tracking-tight leading-[1.05] mb-6 text-balance"
             data-testid="text-industry-headline"
           >
             {industry.headline.split("—")[0]}
             {industry.headline.includes("—") && (
               <>
                 <br className="hidden md:block" />
-                <span className="gradient-text italic font-serif">— {industry.headline.split("—")[1]}</span>
+                <span className="text-accent-grad">— {industry.headline.split("—")[1]}</span>
               </>
             )}
           </motion.h1>
@@ -396,7 +398,7 @@ export default function IndustryPage() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.16 }}
-            className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto mb-8 leading-relaxed"
+            className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto mb-8 leading-relaxed text-pretty"
           >
             {industry.subhead}
           </motion.p>
@@ -416,14 +418,14 @@ export default function IndustryPage() {
                 placeholder="Enter your work email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="flex-1"
+                className="flex-1 h-11"
                 data-testid="input-industry-email"
               />
               <Button size="lg" type="submit" disabled={mutation.isPending} data-testid="button-industry-cta">
                 Get My Plan <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
             </form>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-xs text-muted-foreground font-mono uppercase tracking-wide">
               Built for {industry.name} teams · 11s response time · Cancel anytime
             </p>
           </motion.div>
@@ -431,7 +433,7 @@ export default function IndustryPage() {
       </section>
 
       {/* Outcomes */}
-      <section className="py-12 md:py-16">
+      <section className="py-16 md:py-24">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {industry.outcomes.map((o, i) => (
@@ -441,14 +443,14 @@ export default function IndustryPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.4, delay: i * 0.08 }}
-                className="p-6 rounded-2xl border border-border bg-card text-center hover-elevate"
+                className="p-8 rounded-2xl border bg-card shadow-sm hover:shadow-md transition-shadow text-center"
                 data-testid={`outcome-${o.label.toLowerCase().replace(/\s/g, "-")}`}
               >
-                <div className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-primary/15 text-primary mb-3">
+                <div className="inline-flex items-center justify-center w-11 h-11 rounded-xl bg-primary/10 text-primary mb-4">
                   <o.icon className="w-5 h-5" />
                 </div>
-                <div className="text-4xl font-bold tracking-tight gradient-text mb-1">{o.value}</div>
-                <div className="text-sm text-muted-foreground">{o.label}</div>
+                <div className="font-display text-4xl md:text-5xl font-semibold tracking-tight text-accent-grad mb-1">{o.value}</div>
+                <div className="text-sm font-mono uppercase tracking-wide text-muted-foreground">{o.label}</div>
               </motion.div>
             ))}
           </div>
@@ -456,30 +458,34 @@ export default function IndustryPage() {
       </section>
 
       {/* Pain points */}
-      <section className="py-12 md:py-16 bg-muted/30">
+      <section className="py-16 md:py-24 bg-muted">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-2 gap-10 items-center">
+          <div className="grid md:grid-cols-2 gap-12 items-center">
             <div>
-              <Badge variant="secondary" className="mb-3">
-                Why teams switch
-              </Badge>
-              <h2 className="text-3xl md:text-4xl font-bold tracking-tight leading-tight mb-4">
-                Stop losing leads to{" "}
-                <span className="gradient-text">slow follow-up.</span>
-              </h2>
-              <p className="text-muted-foreground leading-relaxed">
-                Every {industry.name.toLowerCase()} team we work with comes to us
-                with the same problems. BlackSync solves them on day one.
-              </p>
+              <Reveal>
+                <Eyebrow>Why teams switch</Eyebrow>
+              </Reveal>
+              <Reveal delay={0.05}>
+                <h2 className="mt-5 font-display text-3xl md:text-4xl font-semibold tracking-tight leading-[1.1] mb-4 text-balance">
+                  Stop losing leads to{" "}
+                  <span className="text-accent-grad">slow follow-up.</span>
+                </h2>
+              </Reveal>
+              <Reveal delay={0.1}>
+                <p className="text-muted-foreground leading-relaxed text-pretty">
+                  Every {industry.name.toLowerCase()} team we work with comes to us
+                  with the same problems. BlackSync solves them on day one.
+                </p>
+              </Reveal>
             </div>
             <ul className="space-y-3">
               {industry.painPoints.map((p) => (
                 <li
                   key={p}
-                  className="flex items-start gap-3 p-3 rounded-lg bg-card border border-border"
+                  className="flex items-start gap-3 p-4 rounded-xl bg-card border shadow-sm"
                 >
                   <CheckCircle2 className="w-5 h-5 text-primary shrink-0 mt-0.5" />
-                  <span className="text-sm">{p}</span>
+                  <span className="text-sm leading-relaxed">{p}</span>
                 </li>
               ))}
             </ul>
@@ -488,63 +494,79 @@ export default function IndustryPage() {
       </section>
 
       {/* Integrations */}
-      <section className="py-12 md:py-16">
+      <section className="py-16 md:py-24">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <Badge variant="secondary" className="mb-3">
-            Native integrations
-          </Badge>
-          <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-3">
-            Plugs into the tools{" "}
-            <span className="gradient-text">{industry.name} runs on.</span>
-          </h2>
-          <p className="text-muted-foreground mb-8 max-w-xl mx-auto">
-            Two-way sync. Leads in, appointments out, everything logged.
-          </p>
-          <div className="flex flex-wrap justify-center gap-2">
-            {industry.integrations.map((name) => (
-              <div
-                key={name}
-                className="px-4 py-2 rounded-full bg-card border border-border text-sm font-medium"
-              >
-                {name}
-              </div>
-            ))}
-          </div>
+          <Reveal>
+            <Eyebrow>Native integrations</Eyebrow>
+          </Reveal>
+          <Reveal delay={0.05}>
+            <h2 className="mt-5 font-display text-3xl md:text-4xl font-semibold tracking-tight mb-3 text-balance">
+              Plugs into the tools{" "}
+              <span className="text-accent-grad">{industry.name} runs on.</span>
+            </h2>
+          </Reveal>
+          <Reveal delay={0.1}>
+            <p className="text-muted-foreground mb-10 max-w-xl mx-auto text-pretty">
+              Two-way sync. Leads in, appointments out, everything logged.
+            </p>
+          </Reveal>
+          <Reveal delay={0.15}>
+            <div className="flex flex-wrap justify-center gap-2.5">
+              {industry.integrations.map((name) => (
+                <div
+                  key={name}
+                  className="px-4 py-2 rounded-full bg-card border shadow-sm text-sm font-medium hover:shadow-md transition-shadow"
+                >
+                  {name}
+                </div>
+              ))}
+            </div>
+          </Reveal>
         </div>
       </section>
 
       {/* Testimonial */}
-      <section className="py-12 md:py-16 bg-muted/30">
+      <section className="py-16 md:py-24 bg-muted">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-2xl md:text-3xl font-medium leading-snug mb-6 text-foreground">
-            "{industry.testimonial.quote}"
-          </p>
-          <p className="text-sm font-semibold">{industry.testimonial.name}</p>
-          <p className="text-sm text-muted-foreground">{industry.testimonial.role}</p>
+          <Reveal>
+            <p className="font-display text-2xl md:text-3xl font-medium leading-snug mb-8 text-foreground text-balance">
+              "{industry.testimonial.quote}"
+            </p>
+          </Reveal>
+          <Reveal delay={0.05}>
+            <p className="text-sm font-semibold">{industry.testimonial.name}</p>
+            <p className="text-sm font-mono uppercase tracking-wide text-muted-foreground">{industry.testimonial.role}</p>
+          </Reveal>
         </div>
       </section>
 
       {/* Final CTA */}
       <section className="py-16 md:py-24">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-4 leading-[1.1]">
-            Ready to scale {industry.name}?
-          </h2>
-          <p className="text-muted-foreground text-lg mb-8">
-            Get a custom plan built for your team in under 24 hours.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Link href="/#enterprise">
-              <Button size="lg" data-testid="button-industry-talk">
-                Talk to Sales <ArrowRight className="w-4 h-4 ml-2" />
-              </Button>
-            </Link>
-            <Link href="/pricing">
-              <Button size="lg" variant="outline" data-testid="button-industry-pricing">
-                See pricing
-              </Button>
-            </Link>
-          </div>
+          <Reveal>
+            <h2 className="font-display text-3xl md:text-5xl font-semibold tracking-tight mb-4 leading-[1.1] text-balance">
+              Ready to scale <span className="text-accent-grad">{industry.name}</span>?
+            </h2>
+          </Reveal>
+          <Reveal delay={0.05}>
+            <p className="text-muted-foreground text-lg mb-8 text-pretty">
+              Get a custom plan built for your team in under 24 hours.
+            </p>
+          </Reveal>
+          <Reveal delay={0.1}>
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <Link href="/#enterprise">
+                <Button size="lg" data-testid="button-industry-talk">
+                  Talk to Sales <ArrowRight className="w-4 h-4 ml-2" />
+                </Button>
+              </Link>
+              <Link href="/pricing">
+                <Button size="lg" variant="outline" data-testid="button-industry-pricing">
+                  See pricing
+                </Button>
+              </Link>
+            </div>
+          </Reveal>
         </div>
       </section>
 

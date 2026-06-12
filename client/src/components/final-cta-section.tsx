@@ -36,58 +36,83 @@ export function FinalCtaSection() {
   return (
     <section data-testid="section-final-cta" className="relative py-20 md:py-28">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-2xl mx-auto">
-          <motion.h2
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.4 }}
-            className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight leading-[1.1] mb-4"
-            data-testid="text-final-cta-headline"
-          >
-            Your next 10 appointments are{" "}
-            <span className="gradient-text">already waiting.</span>
-          </motion.h2>
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          className="relative overflow-hidden rounded-[2rem] bg-foreground text-background px-6 py-16 md:px-12 md:py-24 shadow-2xl"
+        >
+          {/* Warm glow + dot texture */}
+          <div
+            className="absolute inset-0 opacity-90"
+            style={{
+              background:
+                "radial-gradient(ellipse 60% 80% at 50% -10%, hsl(14 82% 55% / 0.55), transparent 60%), radial-gradient(ellipse 50% 60% at 90% 110%, hsl(32 80% 55% / 0.35), transparent 60%)",
+            }}
+          />
+          <div
+            className="absolute inset-0 opacity-[0.07]"
+            style={{
+              backgroundImage:
+                "radial-gradient(currentColor 1px, transparent 1px)",
+              backgroundSize: "22px 22px",
+            }}
+          />
 
-          <motion.p
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.4, delay: 0.08 }}
-            className="text-base md:text-lg text-muted-foreground mb-8 leading-relaxed"
-            data-testid="text-final-cta-subhead"
-          >
-            Start free. No credit card. No sales call. Live in under 5 minutes.
-          </motion.p>
+          <div className="relative text-center max-w-2xl mx-auto">
+            <span className="inline-flex items-center gap-2 rounded-full border border-background/20 bg-background/10 px-3 py-1 font-mono text-[11px] font-medium uppercase tracking-[0.16em] text-background/80 backdrop-blur">
+              <span className="w-1.5 h-1.5 rounded-full bg-primary" />
+              Get started free
+            </span>
 
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.4, delay: 0.16 }}
-            className="flex flex-col items-center gap-3"
-          >
-            <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row items-center justify-center gap-2 w-full max-w-md">
+            <h2
+              className="mt-6 font-display text-4xl sm:text-5xl md:text-6xl font-semibold tracking-tight leading-[1.04] mb-4 text-balance"
+              data-testid="text-final-cta-headline"
+            >
+              Your next 10 appointments are{" "}
+              <span className="bg-gradient-to-r from-orange-300 to-amber-200 bg-clip-text text-transparent">
+                already waiting.
+              </span>
+            </h2>
+
+            <p
+              className="text-base md:text-lg text-background/70 mb-8 leading-relaxed text-pretty"
+              data-testid="text-final-cta-subhead"
+            >
+              Start free. No credit card. No sales call. Live in under 5 minutes.
+            </p>
+
+            <form
+              onSubmit={handleSubmit}
+              className="flex flex-col sm:flex-row items-center justify-center gap-2.5 w-full max-w-md mx-auto p-1.5 sm:rounded-2xl sm:border sm:border-background/15 sm:bg-background/10 sm:backdrop-blur"
+            >
               <Input
                 type="email"
                 placeholder="Enter your work email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="flex-1"
+                className="flex-1 h-12 border-background/20 bg-background/10 text-background placeholder:text-background/50 sm:border-transparent sm:bg-transparent sm:shadow-none sm:focus-visible:ring-0"
                 data-testid="input-final-cta-email"
               />
-              <Button size="lg" type="submit" disabled={mutation.isPending} data-testid="button-final-cta">
+              <Button
+                size="lg"
+                type="submit"
+                disabled={mutation.isPending}
+                className="w-full sm:w-auto bg-background text-foreground hover:bg-background/90"
+                data-testid="button-final-cta"
+              >
                 {mutation.isPending ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
                 Get Started
-                {!mutation.isPending && <ArrowRight className="w-4 h-4 ml-2" />}
+                {!mutation.isPending && <ArrowRight className="w-4 h-4 ml-1" />}
               </Button>
             </form>
 
-            <p className="text-xs text-muted-foreground" data-testid="text-final-cta-subtext">
+            <p className="mt-4 text-xs text-background/60" data-testid="text-final-cta-subtext">
               No setup fees · Phone number from $3.50/mo · Cancel anytime
             </p>
-          </motion.div>
-        </div>
+          </div>
+        </motion.div>
       </div>
     </section>
   );

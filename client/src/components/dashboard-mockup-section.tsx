@@ -127,10 +127,10 @@ export function DashboardMockupSection() {
           whileInView={{ y: 0, opacity: 1 }}
           viewport={{ once: true, amount: 0.1 }}
           transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-          className="relative rounded-t-2xl overflow-hidden border border-border border-b-0 bg-[#0e0d12] text-zinc-200"
+          className="relative rounded-t-2xl overflow-hidden border border-white/10 border-b-0 bg-[#0e0d12] text-zinc-200 ring-1 ring-black/5"
           style={{
             boxShadow:
-              "0 -10px 40px -10px rgba(86, 69, 63, 0.2)",
+              "0 -20px 60px -20px hsl(14 76% 49% / 0.30), 0 -2px 0 0 rgba(255,255,255,0.04)",
           }}
         >
           {/* Window chrome */}
@@ -147,7 +147,7 @@ export function DashboardMockupSection() {
             {/* Sidebar */}
             <aside className="w-[180px] shrink-0 border-r border-white/5 bg-[#0a0a0e] flex flex-col">
               <div className="px-4 py-4 flex items-center gap-2 border-b border-white/5">
-                <div className="w-6 h-6 rounded-md bg-gradient-to-br from-primary to-accent flex items-center justify-center">
+                <div className="w-6 h-6 rounded-md bg-gradient-to-br from-primary via-orange-500 to-amber-500 flex items-center justify-center">
                   <span className="text-[10px] font-bold text-white">B</span>
                 </div>
                 <span className="text-xs font-semibold tracking-tight">BlackSync</span>
@@ -246,7 +246,7 @@ export function DashboardMockupSection() {
                     }`}
                   >
                     <div className="flex items-center gap-2 min-w-0">
-                      <div className="w-5 h-5 rounded-full bg-gradient-to-br from-primary/60 to-accent/60 text-white flex items-center justify-center text-[8px] font-bold shrink-0">
+                      <div className="w-5 h-5 rounded-full bg-gradient-to-br from-primary/70 to-orange-500/70 text-white flex items-center justify-center text-[8px] font-bold shrink-0">
                         {lead.name.split(" ").map((n) => n[0]).join("")}
                       </div>
                       <span className="font-medium text-zinc-100 truncate">{lead.name}</span>

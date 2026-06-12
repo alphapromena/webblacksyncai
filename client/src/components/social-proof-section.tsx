@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
+import { SectionHeading, Reveal } from "@/components/ui/section";
 import followUpBossLogo from "@assets/logos/followupboss.png";
 import sierraInteractiveLogo from "@assets/logos/sierra-interactive.png";
 import kvcoreLogo from "@assets/logos/kvcore.png";
@@ -74,32 +75,21 @@ export function SocialProofSection() {
     <section
       id="social-proof"
       data-testid="section-social-proof"
-      className="py-16 md:py-24 relative bg-background"
+      className="py-20 md:py-28 relative bg-background"
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.4 }}
-          className="text-center mb-12"
-        >
-          <span
-            className="inline-block px-4 py-1.5 rounded-full bg-card border border-border text-xs font-medium text-foreground/70 mb-5"
-            data-testid="pill-results"
-          >
-            Results
-          </span>
-          <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-foreground">
-            Real teams. Real{" "}
-            <span
-              className="italic"
-              style={{ fontFamily: "var(--font-serif)", color: "#9E6B57" }}
-            >
-              booked calendars.
-            </span>
-          </h2>
-        </motion.div>
+        <SectionHeading
+          className="mb-12 md:mb-16"
+          eyebrow={<span data-testid="pill-results">Results</span>}
+          title={
+            <>
+              Real teams. Real{" "}
+              <span className="font-serif italic text-accent-grad">
+                booked calendars.
+              </span>
+            </>
+          }
+        />
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-14">
           {stats.map((s, i) => (
@@ -109,17 +99,16 @@ export function SocialProofSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.4, delay: i * 0.08 }}
-              className="rounded-2xl border border-border bg-card/60 p-6 text-center"
+              className="rounded-2xl border bg-card p-7 text-center shadow-sm hover:shadow-md transition-shadow"
               data-testid={`stat-${i}`}
             >
               <div
-                className="text-4xl md:text-5xl font-bold tracking-tight mb-2"
-                style={{ color: "#3F7D58" }}
+                className="font-display text-5xl md:text-6xl font-semibold tracking-tight mb-3 text-accent-grad"
                 data-testid={`stat-value-${i}`}
               >
                 <AnimatedCounter value={s.value} suffix={s.suffix} decimals={s.decimals} />
               </div>
-              <p className="text-sm text-muted-foreground leading-relaxed">{s.label}</p>
+              <p className="text-sm text-muted-foreground leading-relaxed text-pretty">{s.label}</p>
             </motion.div>
           ))}
         </div>
@@ -132,10 +121,10 @@ export function SocialProofSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.4, delay: i * 0.08 }}
-              className="rounded-2xl border border-border bg-card/60 p-6 flex flex-col"
+              className="rounded-2xl border bg-card p-7 flex flex-col shadow-sm hover:shadow-md transition-shadow"
               data-testid={`card-social-testimonial-${i}`}
             >
-              <blockquote className="text-sm leading-relaxed text-foreground/90 mb-5 flex-1">
+              <blockquote className="text-sm leading-relaxed text-foreground/90 mb-6 flex-1 text-pretty">
                 "{t.quote}"
               </blockquote>
               <div className="flex items-center gap-3">
@@ -154,8 +143,8 @@ export function SocialProofSection() {
           ))}
         </div>
 
-        <div>
-          <p className="text-center text-xs uppercase tracking-[0.18em] text-muted-foreground mb-5">
+        <Reveal>
+          <p className="text-center font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground mb-6">
             Trusted by teams using
           </p>
           <div className="flex flex-wrap items-center justify-center gap-x-10 gap-y-6 opacity-60">
@@ -170,7 +159,7 @@ export function SocialProofSection() {
               />
             ))}
           </div>
-        </div>
+        </Reveal>
       </div>
     </section>
   );

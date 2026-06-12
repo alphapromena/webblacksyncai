@@ -1,5 +1,5 @@
-import { Badge } from "@/components/ui/badge";
-import { motion } from "framer-motion";
+import { Quote } from "lucide-react";
+import { SectionHeading, Reveal } from "@/components/ui/section";
 
 const testimonials = [
   {
@@ -24,38 +24,42 @@ const testimonials = [
 
 export function TestimonialsSection() {
   return (
-    <section id="testimonials" data-testid="section-testimonials" className="py-16 md:py-20 relative">
-      <div className="absolute inset-0 hero-gradient opacity-30" />
-      <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.4 }}
-          className="text-center mb-10"
-        >
-          <Badge variant="secondary" className="mb-3">Results</Badge>
-          <h2 className="text-2xl md:text-3xl font-bold tracking-tight">
-            Agents <span className="gradient-text">Love Their AI Colleague</span>
-          </h2>
-        </motion.div>
+    <section id="testimonials" data-testid="section-testimonials" className="py-20 md:py-28 relative">
+      <div className="absolute inset-0 hero-gradient opacity-40" />
+      <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <SectionHeading
+          eyebrow="Results"
+          title={<>Agents <span className="text-accent-grad">Love Their AI Colleague</span></>}
+          lead="Real teams, real pipelines, real appointments — within days of going live."
+        />
 
-        <div className="grid md:grid-cols-3 gap-5">
+        <div className="mt-14 grid md:grid-cols-3 gap-6">
           {testimonials.map((t, index) => (
-            <motion.div
-              key={t.name}
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: index * 0.08 }}
-              className="p-5 rounded-lg border border-border/50 bg-card/30"
-              data-testid={`card-testimonial-${index}`}
-            >
-              <Badge variant="secondary" className="mb-3 text-xs">{t.metric}</Badge>
-              <blockquote className="text-sm leading-relaxed mb-4">"{t.quote}"</blockquote>
-              <p className="text-sm font-semibold">{t.name}</p>
-              <p className="text-xs text-muted-foreground">{t.role}</p>
-            </motion.div>
+            <Reveal key={t.name} delay={index * 0.06}>
+              <figure
+                className="group relative flex h-full flex-col rounded-2xl border border-card-border bg-card p-7 md:p-8 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition"
+                data-testid={`card-testimonial-${index}`}
+              >
+                <Quote
+                  className="w-10 h-10 text-primary/25 mb-6"
+                  fill="currentColor"
+                  strokeWidth={0}
+                  aria-hidden="true"
+                />
+                <blockquote className="font-display text-xl md:text-2xl font-medium leading-snug tracking-tight text-foreground text-pretty mb-7 flex-1">
+                  "{t.quote}"
+                </blockquote>
+                <figcaption className="mt-auto flex items-center justify-between gap-4 border-t border-card-border/60 pt-5">
+                  <div>
+                    <p className="text-sm font-semibold text-foreground">{t.name}</p>
+                    <p className="text-sm text-muted-foreground">{t.role}</p>
+                  </div>
+                  <span className="inline-flex shrink-0 items-center rounded-full bg-primary/10 px-3 py-1 font-mono text-[11px] uppercase tracking-wider text-primary font-semibold">
+                    {t.metric}
+                  </span>
+                </figcaption>
+              </figure>
+            </Reveal>
           ))}
         </div>
       </div>

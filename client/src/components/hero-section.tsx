@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
@@ -125,9 +124,9 @@ export function HeroSection() {
   return (
     <section
       data-testid="section-hero"
-      className="relative pt-24 pb-8 md:pt-32 md:pb-12 hero-gradient overflow-hidden"
+      className="relative pt-28 pb-10 md:pt-36 md:pb-16 hero-gradient overflow-hidden"
     >
-      <div className="absolute inset-0 grid-bg opacity-40 dark:opacity-20" />
+      <div className="absolute inset-0 grid-bg opacity-60 dark:opacity-30" />
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
         {/* Centered headline + CTAs */}
@@ -135,29 +134,35 @@ export function HeroSection() {
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
+            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            className="flex justify-center"
           >
-            <Badge variant="secondary" className="mb-5" data-testid="badge-hero-eyebrow">
-              AI-Powered Outbound · 40+ Languages · GPT-5 · Claude · Gemini
-            </Badge>
+            <span className="eyebrow" data-testid="badge-hero-eyebrow">
+              <span className="relative flex w-1.5 h-1.5">
+                <span className="absolute inline-flex h-full w-full rounded-full bg-primary opacity-75 animate-ping" />
+                <span className="relative inline-flex w-1.5 h-1.5 rounded-full bg-primary" />
+              </span>
+              AI Outbound · 40+ Languages · GPT-5 · Claude · Gemini
+            </span>
           </motion.div>
 
           <motion.h1
-            initial={{ opacity: 0, y: 16 }}
+            initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.08 }}
-            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.05] mb-5"
+            transition={{ duration: 0.55, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
+            className="mt-6 font-display text-[2.75rem] leading-[1.02] sm:text-6xl md:text-7xl font-semibold tracking-[-0.03em] mb-5 text-balance"
             data-testid="text-hero-headline"
           >
-            Hundreds of outbound calls.{" "}
-            <span className="gradient-text italic font-serif">Zero extra hires.</span>
+            Hundreds of outbound calls.
+            <br className="hidden sm:block" />{" "}
+            <span className="text-accent-grad">Zero extra hires.</span>
           </motion.h1>
 
           <motion.p
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.16 }}
-            className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto mb-8 leading-relaxed"
+            transition={{ duration: 0.5, delay: 0.16, ease: [0.16, 1, 0.3, 1] }}
+            className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-9 leading-relaxed text-pretty"
             data-testid="text-hero-subheadline"
           >
             Describe what you need. BlackSync's AI builds your agent, writes
@@ -168,24 +173,24 @@ export function HeroSection() {
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.24 }}
-            className="flex flex-col items-center gap-3 mb-4"
+            transition={{ duration: 0.5, delay: 0.24, ease: [0.16, 1, 0.3, 1] }}
+            className="flex flex-col items-center gap-4 mb-5"
           >
             <form
               onSubmit={handleStart}
-              className="flex flex-col sm:flex-row items-center justify-center gap-2 w-full max-w-md"
+              className="flex flex-col sm:flex-row items-center justify-center gap-2.5 w-full max-w-md p-1.5 sm:rounded-2xl sm:border sm:border-border sm:bg-card sm:shadow-lg"
             >
               <Input
                 type="email"
                 placeholder="Enter your work email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="flex-1"
+                className="flex-1 h-12 sm:border-transparent sm:bg-transparent sm:shadow-none sm:focus-visible:ring-0"
                 data-testid="input-hero-email"
               />
-              <Button size="lg" type="submit" data-testid="button-hero-cta">
+              <Button size="lg" type="submit" className="w-full sm:w-auto" data-testid="button-hero-cta">
                 Get Started
-                <ArrowRight className="w-4 h-4 ml-2" />
+                <ArrowRight className="w-4 h-4 ml-1" />
               </Button>
             </form>
 
@@ -198,12 +203,16 @@ export function HeroSection() {
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.28 }}
-            className="mb-12"
+            transition={{ duration: 0.5, delay: 0.32, ease: [0.16, 1, 0.3, 1] }}
+            className="mb-14 flex items-center justify-center gap-4 text-sm"
           >
+            <span className="flex items-center gap-1.5 text-muted-foreground">
+              <span className="text-primary">★★★★★</span> 4.9 average
+            </span>
+            <span className="hidden sm:inline w-px h-4 bg-border" aria-hidden="true" />
             <a
               href="#enterprise"
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+              className="text-muted-foreground hover:text-foreground font-medium transition-colors"
               data-testid="link-hero-demo"
             >
               or Book a 15-min demo <ArrowRight className="w-3 h-3 inline ml-0.5" />

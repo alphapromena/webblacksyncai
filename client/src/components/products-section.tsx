@@ -1,7 +1,5 @@
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { motion } from "framer-motion";
 import { Home, Shield, Landmark, Building2, HeartPulse, Car } from "lucide-react";
+import { SectionHeading, Reveal } from "@/components/ui/section";
 
 const industries = [
   {
@@ -38,60 +36,63 @@ const moreIndustries = [
 
 export function ProductsSection() {
   return (
-    <section id="industries" data-testid="section-products" className="py-16 md:py-20 relative">
+    <section id="industries" data-testid="section-products" className="py-20 md:py-28 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.4 }}
-          className="text-center mb-10"
-        >
-          <Badge variant="secondary" className="mb-3">Industries</Badge>
-          <h2 className="text-2xl md:text-3xl font-bold tracking-tight mb-3">
-            Built for <span className="gradient-text">High-Value Sales</span>
-          </h2>
-          <p className="text-muted-foreground max-w-xl mx-auto text-sm md:text-base">
-            Trained on millions of real conversations in your industry.
-          </p>
-        </motion.div>
+        <SectionHeading
+          eyebrow="Industries"
+          title={<>Built for <span className="text-accent-grad">High-Value Sales</span></>}
+          lead="Trained on millions of real conversations in your industry — so it speaks the language your leads expect from day one."
+        />
 
-        <div className="grid md:grid-cols-3 gap-5">
+        <div className="mt-14 grid md:grid-cols-3 gap-6">
           {industries.map((industry, index) => (
-            <motion.div
-              key={industry.name}
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: index * 0.08 }}
-            >
-              <Card className="h-full card-glow" data-testid={`card-product-${index}`}>
-                <CardContent className="p-5 md:p-6">
-                  <div className={`w-10 h-10 rounded-md bg-gradient-to-br ${industry.gradient} flex items-center justify-center mb-4`}>
-                    <industry.icon className="w-5 h-5 text-white" />
+            <Reveal key={industry.name} delay={index * 0.06}>
+              <div
+                className="group flex h-full flex-col rounded-2xl border border-card-border bg-card p-7 md:p-8 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition"
+                data-testid={`card-product-${index}`}
+              >
+                <div
+                  className={`w-12 h-12 rounded-xl bg-gradient-to-br ${industry.gradient} flex items-center justify-center mb-6 shadow-md`}
+                >
+                  <industry.icon className="w-6 h-6 text-white" />
+                </div>
+                <p className="font-mono text-[11px] uppercase tracking-wider text-primary font-semibold mb-2">
+                  {industry.tagline}
+                </p>
+                <h3 className="font-display text-2xl font-semibold tracking-tight mb-3">
+                  {industry.name}
+                </h3>
+                <p className="text-[15px] text-muted-foreground leading-relaxed text-pretty">
+                  {industry.description}
+                </p>
+                <div className="mt-auto pt-6">
+                  <div className="flex items-center gap-2 border-t border-card-border/60 pt-5 font-mono text-[10px] uppercase tracking-wider text-muted-foreground/80">
+                    <span className="inline-block w-1.5 h-1.5 rounded-full bg-primary" />
+                    Trained on millions of real conversations
                   </div>
-                  <h3 className="text-lg font-bold mb-0.5">{industry.name}</h3>
-                  <p className="text-xs text-primary font-medium mb-2">{industry.tagline}</p>
-                  <p className="text-sm text-muted-foreground leading-relaxed">{industry.description}</p>
-                </CardContent>
-              </Card>
-            </motion.div>
+                </div>
+              </div>
+            </Reveal>
           ))}
         </div>
 
-        <div className="flex flex-wrap items-center justify-center gap-3 mt-6">
-          <span className="text-xs text-muted-foreground">Also:</span>
-          {moreIndustries.map((item) => (
-            <div
-              key={item.name}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-border/50 bg-card/30 text-xs text-muted-foreground"
-              data-testid={`badge-industry-${item.name.toLowerCase().replace(/\s/g, "-")}`}
-            >
-              <item.icon className="w-3.5 h-3.5" />
-              {item.name}
-            </div>
-          ))}
-        </div>
+        <Reveal delay={0.1}>
+          <div className="flex flex-wrap items-center justify-center gap-3 mt-12">
+            <span className="font-mono text-[11px] uppercase tracking-wider text-muted-foreground">
+              Also:
+            </span>
+            {moreIndustries.map((item) => (
+              <div
+                key={item.name}
+                className="flex items-center gap-2 px-3.5 py-2 rounded-full border border-card-border bg-card text-sm text-foreground/80 shadow-sm hover:shadow-md transition-shadow"
+                data-testid={`badge-industry-${item.name.toLowerCase().replace(/\s/g, "-")}`}
+              >
+                <item.icon className="w-4 h-4 text-primary" />
+                {item.name}
+              </div>
+            ))}
+          </div>
+        </Reveal>
       </div>
     </section>
   );
