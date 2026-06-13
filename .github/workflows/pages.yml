@@ -4,7 +4,6 @@ on:
   workflow_dispatch:
   push:
     branches: ["claude/nice-keller-ur7mnt"]
-    paths-ignore: ["DESIGN.md", "replit.md", "**/*.md"]
 
 permissions:
   contents: read
@@ -27,11 +26,11 @@ jobs:
         run: npm ci || npm install
       - name: Build static client (project-pages base path)
         run: npx vite build --base=/webblacksyncai/
-      - name: SPA fallback (404 -> index)
-        run: cp dist/public/index.html dist/public/404.html
+      - name: SPA fallback (404 -> index) + .nojekyll
+        run: |
+          cp dist/public/index.html dist/public/404.html
+          touch dist/public/.nojekyll
       - uses: actions/configure-pages@v5
-        with:
-          enablement: true
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist/public
