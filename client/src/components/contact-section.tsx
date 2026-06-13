@@ -65,8 +65,7 @@ export function ContactSection() {
               Get Your <span className="gradient-text">AI Colleague</span> Working Today
             </h2>
             <p className="text-muted-foreground text-sm md:text-base mb-6 leading-relaxed">
-              14-day free trial. No credit card required. Your AI can be making
-              calls within the hour.
+              No long-term contracts. Your AI can be making calls within the hour.
             </p>
             <div className="space-y-3">
               <ContactInfo icon={<Phone className="w-4 h-4" />} label="Sales" value="(888) 555-SYNC" />
@@ -138,9 +137,9 @@ export function ContactSection() {
                       )}
                     />
                     <Button type="submit" className="w-full" disabled={mutation.isPending} data-testid="button-submit-contact">
-                      {mutation.isPending ? "Sending..." : (<>Start Free Trial <Send className="w-4 h-4 ml-2" /></>)}
+                      {mutation.isPending ? "Sending..." : (<>Get Started <Send className="w-4 h-4 ml-2" /></>)}
                     </Button>
-                    <p className="text-[11px] text-muted-foreground text-center">No credit card required. Cancel anytime.</p>
+                    <p className="text-[11px] text-muted-foreground text-center">No long-term contracts. Cancel anytime.</p>
                   </form>
                 </Form>
               </CardContent>

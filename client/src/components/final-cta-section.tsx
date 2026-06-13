@@ -63,7 +63,7 @@ export function FinalCtaSection() {
           <div className="relative text-center max-w-2xl mx-auto">
             <span className="inline-flex items-center gap-2 rounded-full border border-background/20 bg-background/10 px-3 py-1 font-mono text-[11px] font-medium uppercase tracking-[0.16em] text-background/80 backdrop-blur">
               <span className="w-1.5 h-1.5 rounded-full bg-primary" />
-              Get started free
+              Get started
             </span>
 
             <h2
@@ -80,7 +80,7 @@ export function FinalCtaSection() {
               className="text-base md:text-lg text-background/70 mb-8 leading-relaxed text-pretty"
               data-testid="text-final-cta-subhead"
             >
-              Start free. No credit card. No sales call. Live in under 5 minutes.
+              No long-term contracts. No sales call required. Live in under 5 minutes.
             </p>
 
             <form
