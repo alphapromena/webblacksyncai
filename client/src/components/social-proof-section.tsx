@@ -6,6 +6,14 @@ import sierraInteractiveLogo from "@assets/logos/sierra-interactive.png";
 import kvcoreLogo from "@assets/logos/kvcore.png";
 import boomtownLogo from "@assets/logos/boomtown.png";
 import loftyLogo from "@assets/logos/lofty.png";
+import realGeeksLogo from "@assets/logos/realgeeks.svg";
+import cincLogo from "@assets/logos/cinc.svg";
+import zillowLogo from "@assets/logos/zillow.svg";
+import realtorLogo from "@assets/logos/realtorcom.svg";
+import calendlyLogo from "@assets/logos/calendly.svg";
+import hubspotLogo from "@assets/logos/hubspot.svg";
+import salesforceLogo from "@assets/logos/salesforce.svg";
+import zapierLogo from "@assets/logos/zapier.svg";
 
 const stats = [
   { value: 3.2, suffix: "x", decimals: 1, label: "More appointments booked vs. human ISAs" },
@@ -40,6 +48,14 @@ const trustedBy = [
   { name: "kvCORE", src: kvcoreLogo, height: "h-6 md:h-7" },
   { name: "BoomTown", src: boomtownLogo, height: "h-9 md:h-10" },
   { name: "Lofty", src: loftyLogo, height: "h-7 md:h-8" },
+  { name: "Real Geeks", src: realGeeksLogo, height: "h-5 md:h-6" },
+  { name: "CINC", src: cincLogo, height: "h-5 md:h-6" },
+  { name: "Zillow", src: zillowLogo, height: "h-5 md:h-6" },
+  { name: "realtor.com", src: realtorLogo, height: "h-5 md:h-6" },
+  { name: "HubSpot", src: hubspotLogo, height: "h-5 md:h-6" },
+  { name: "Salesforce", src: salesforceLogo, height: "h-5 md:h-6" },
+  { name: "Calendly", src: calendlyLogo, height: "h-5 md:h-6" },
+  { name: "Zapier", src: zapierLogo, height: "h-5 md:h-6" },
 ];
 
 function AnimatedCounter({ value, suffix, decimals }: { value: number; suffix: string; decimals: number }) {
@@ -145,9 +161,9 @@ export function SocialProofSection() {
 
         <Reveal>
           <p className="text-center font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground mb-6">
-            Trusted by teams using
+            Plugs into the tools your team already runs on
           </p>
-          <div className="flex flex-wrap items-center justify-center gap-x-10 gap-y-6 opacity-60">
+          <div className="flex flex-wrap items-center justify-center gap-x-8 md:gap-x-10 gap-y-6 opacity-70">
             {trustedBy.map((logo, i) => (
               <img
                 key={logo.name}

@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import {
   LayoutDashboard,
   Users,
@@ -113,6 +113,23 @@ function SideBars({ side }: { side: "left" | "right" }) {
 }
 
 export function DashboardMockupSection() {
+  // Interactive 3D tilt — the panel sits in real perspective and reacts to the cursor.
+  const px = useMotionValue(0.5);
+  const py = useMotionValue(0.5);
+  // Rest pose (px=py=0.5) is a gentle 3/4 view, so it reads as 3D even without the cursor.
+  const rotateX = useSpring(useTransform(py, [0, 1], [14, 2]), { stiffness: 150, damping: 18 });
+  const rotateY = useSpring(useTransform(px, [0, 1], [-16, 6]), { stiffness: 150, damping: 18 });
+
+  function handleMove(e: React.MouseEvent<HTMLDivElement>) {
+    const r = e.currentTarget.getBoundingClientRect();
+    px.set((e.clientX - r.left) / r.width);
+    py.set((e.clientY - r.top) / r.height);
+  }
+  function handleLeave() {
+    px.set(0.5);
+    py.set(0.5);
+  }
+
   return (
     <section
       data-testid="section-dashboard-mockup"
@@ -121,16 +138,23 @@ export function DashboardMockupSection() {
       <SideBars side="left" />
       <SideBars side="right" />
 
-      <div className="relative max-w-[920px] mx-auto px-4 sm:px-6">
+      <div
+        className="relative max-w-[920px] mx-auto px-4 sm:px-6"
+        style={{ perspective: "1600px" }}
+        onMouseMove={handleMove}
+        onMouseLeave={handleLeave}
+      >
         <motion.div
           initial={{ y: 40, opacity: 0 }}
           whileInView={{ y: 0, opacity: 1 }}
           viewport={{ once: true, amount: 0.1 }}
           transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-          className="relative rounded-t-2xl overflow-hidden border border-white/10 border-b-0 bg-[#0e0d12] text-zinc-200 ring-1 ring-black/5"
+          className="relative rounded-t-2xl overflow-hidden border border-white/10 border-b-0 bg-[#0e0d12] text-zinc-200 ring-1 ring-black/5 [transform-style:preserve-3d]"
           style={{
+            rotateX,
+            rotateY,
             boxShadow:
-              "0 -20px 60px -20px hsl(14 76% 49% / 0.30), 0 -2px 0 0 rgba(255,255,255,0.04)",
+              "0 -20px 60px -20px hsl(14 76% 49% / 0.30), 0 40px 80px -40px rgba(0,0,0,0.45), 0 -2px 0 0 rgba(255,255,255,0.04)",
           }}
         >
           {/* Window chrome */}
