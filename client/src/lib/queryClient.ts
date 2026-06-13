@@ -7,14 +7,15 @@ async function throwIfResNotOk(res: Response) {
   }
 }
 
-// Optional: when set, lead form submissions POST directly to this URL
-// (e.g. a GoHighLevel Inbound Webhook, Zapier Catch Hook, or Make.com webhook)
-// instead of the Express /api backend. This lets the forms work on a static
-// host (GitHub Pages / Vercel static) with no server. Set it in Vercel project
-// env vars (and .env locally) as VITE_LEADS_WEBHOOK_URL.
-const LEADS_WEBHOOK_URL = import.meta.env.VITE_LEADS_WEBHOOK_URL as
-  | string
-  | undefined;
+// Lead destination. Defaults to the BlackSync GoHighLevel Inbound Webhook so the
+// forms work on any static host with no backend. Override per-environment with
+// VITE_LEADS_WEBHOOK_URL (e.g. to point at Zapier/Make or a different CRM).
+const DEFAULT_LEADS_WEBHOOK_URL =
+  "https://services.leadconnectorhq.com/hooks/0LKIRgZlaDDW51j4Uzd5/webhook-trigger/91b7c2b2-45fe-45cb-b90a-77d9a37a42a1";
+
+const LEADS_WEBHOOK_URL =
+  (import.meta.env.VITE_LEADS_WEBHOOK_URL as string | undefined) ||
+  DEFAULT_LEADS_WEBHOOK_URL;
 
 const LEAD_ENDPOINTS = ["/api/leads", "/api/enterprise-leads"];
 
@@ -45,12 +46,12 @@ export async function apiRequest(
     method.toUpperCase() === "POST" &&
     LEAD_ENDPOINTS.includes(url)
   ) {
+    // no-cors: webhook providers don't return CORS headers; the POST still
+    // delivers (GHL parses the JSON body). We can't read the response, so we
+    // treat delivery as success. (Content-Type is dropped in no-cors mode.)
     await fetch(LEADS_WEBHOOK_URL, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(normalizeLead(url, data)),
-      // no-cors: webhook providers don't return CORS headers; the POST still
-      // delivers. We can't read the response, so we treat delivery as success.
       mode: "no-cors",
     });
     return new Response(null, { status: 200 });
