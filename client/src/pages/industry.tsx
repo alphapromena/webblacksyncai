@@ -24,6 +24,7 @@ import { useState, useEffect } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
+import { useHoneypot, HoneypotInput } from "@/components/ui/honeypot";
 import {
   Dialog,
   DialogContent,
@@ -252,6 +253,7 @@ export default function IndustryPage() {
   const [email, setEmail] = useState("");
   const [qualifyOpen, setQualifyOpen] = useState(false);
   const { toast } = useToast();
+  const { ref: hpRef, isBot } = useHoneypot();
 
   useEffect(() => {
     if (slug === "real-estate") {
@@ -303,6 +305,11 @@ export default function IndustryPage() {
         description: "Please enter a valid work email.",
         variant: "destructive",
       });
+      return;
+    }
+    if (isBot()) {
+      toast({ title: "You're in!", description: "We'll be in touch shortly." });
+      setEmail("");
       return;
     }
     mutation.mutate(email);
@@ -413,6 +420,7 @@ export default function IndustryPage() {
               onSubmit={handleSubmit}
               className="flex flex-col sm:flex-row items-center justify-center gap-2 w-full max-w-md"
             >
+              <HoneypotInput inputRef={hpRef} />
               <Input
                 type="email"
                 placeholder="Enter your work email"

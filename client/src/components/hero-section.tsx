@@ -25,6 +25,7 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { Link } from "wouter";
+import { useHoneypot, HoneypotInput } from "@/components/ui/honeypot";
 
 const INDUSTRY_OPTIONS = [
   "Real Estate",
@@ -74,6 +75,7 @@ export function HeroSection() {
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState<HeroLead>(EMPTY_LEAD);
   const { toast } = useToast();
+  const { ref: hpRef, isBot } = useHoneypot();
 
   function update<K extends keyof HeroLead>(key: K, value: HeroLead[K]) {
     setForm((prev) => ({ ...prev, [key]: value }));
@@ -116,6 +118,13 @@ export function HeroSection() {
     e.preventDefault();
     if (!form.industry) {
       toast({ title: "Pick your industry", description: "This helps us tailor your plan.", variant: "destructive" });
+      return;
+    }
+    if (isBot()) {
+      toast({ title: "You're in!", description: "We'll be in touch with your custom plan shortly." });
+      setForm(EMPTY_LEAD);
+      setEmail("");
+      setOpen(false);
       return;
     }
     mutation.mutate(form);
@@ -331,6 +340,7 @@ export function HeroSection() {
           </DialogHeader>
 
           <form onSubmit={handleSubmit} className="space-y-4 pt-1">
+            <HoneypotInput inputRef={hpRef} />
             <div className="space-y-1.5">
               <Label htmlFor="hero-name">Your name</Label>
               <Input

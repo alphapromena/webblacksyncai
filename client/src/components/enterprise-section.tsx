@@ -10,6 +10,7 @@ import { z } from "zod";
 import { useMutation } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
+import { useHoneypot, HoneypotInput } from "@/components/ui/honeypot";
 import {
   Form,
   FormControl,
@@ -53,6 +54,7 @@ const bulletPoints = [
 
 export function EnterpriseSection() {
   const { toast } = useToast();
+  const { ref: hpRef, isBot } = useHoneypot();
 
   const form = useForm<EnterpriseForm>({
     resolver: zodResolver(enterpriseSchema),
@@ -120,7 +122,18 @@ export function EnterpriseSection() {
             <Card className="card-glow rounded-2xl border bg-card shadow-lg">
               <CardContent className="p-6 md:p-8">
                 <Form {...form}>
-                  <form onSubmit={form.handleSubmit((d) => mutation.mutate(d))} className="space-y-4">
+                  <form
+                    onSubmit={form.handleSubmit((d) => {
+                      if (isBot()) {
+                        toast({ title: "Got it!", description: "We'll be in touch within 24 hours." });
+                        form.reset();
+                        return;
+                      }
+                      mutation.mutate(d);
+                    })}
+                    className="space-y-4"
+                  >
+                    <HoneypotInput inputRef={hpRef} />
                     <div className="grid grid-cols-2 gap-4">
                       <FormField
                         control={form.control}

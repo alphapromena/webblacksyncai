@@ -6,10 +6,12 @@ import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
+import { useHoneypot, HoneypotInput } from "@/components/ui/honeypot";
 
 export function FinalCtaSection() {
   const [email, setEmail] = useState("");
   const { toast } = useToast();
+  const { ref: hpRef, isBot } = useHoneypot();
 
   const mutation = useMutation({
     mutationFn: async (emailValue: string) => {
@@ -28,6 +30,12 @@ export function FinalCtaSection() {
     e.preventDefault();
     if (!email || !email.includes("@")) {
       toast({ title: "Invalid email", description: "Please enter a valid work email.", variant: "destructive" });
+      return;
+    }
+    if (isBot()) {
+      // Spam: mimic success, don't send.
+      toast({ title: "You're in!", description: "Check your inbox to get started." });
+      setEmail("");
       return;
     }
     mutation.mutate(email);
@@ -87,6 +95,7 @@ export function FinalCtaSection() {
               onSubmit={handleSubmit}
               className="flex flex-col sm:flex-row items-center justify-center gap-2.5 w-full max-w-md mx-auto p-1.5 sm:rounded-2xl sm:border sm:border-background/15 sm:bg-background/10 sm:backdrop-blur"
             >
+              <HoneypotInput inputRef={hpRef} />
               <Input
                 type="email"
                 placeholder="Enter your work email"
