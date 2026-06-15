@@ -208,9 +208,9 @@ export function HeroSection() {
             className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-9 leading-relaxed text-pretty"
             data-testid="text-hero-subheadline"
           >
-            Describe what you need. BlackSync's AI builds your agent, writes
-            your scripts, connects your calendar, and starts calling leads — in
-            minutes.
+            Hundreds of personalized calls in minutes, not days. Your AI voice
+            agents reach every new lead, qualify them, and book the appointment —
+            so your team spends its time with people ready to talk.
           </motion.p>
 
           <motion.div

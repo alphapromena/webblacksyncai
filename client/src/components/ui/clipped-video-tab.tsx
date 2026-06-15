@@ -105,7 +105,7 @@ export default function ClippedVideoTab() {
       <div className="max-w-7xl mx-auto px-6">
         <div className="grid md:grid-cols-2 gap-14 items-start mb-10">
           <div>
-            <h2 className="text-[46px] leading-[50px] tracking-tight font-bold text-foreground max-w-2xl">
+            <h2 className="font-display text-3xl sm:text-4xl md:text-[46px] md:leading-[50px] leading-tight tracking-tight font-semibold text-foreground max-w-2xl">
               Your AI Agent,<br />In Action
             </h2>
           </div>
@@ -119,9 +119,31 @@ export default function ClippedVideoTab() {
       </div>
 
       {/* IMAGE AREA */}
-      <div className="max-w-7xl mx-auto px-6 relative">
-        {/* FLOATING TABS */}
-        <div className="absolute left-2 bottom-16 z-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 relative">
+        {/* MOBILE TABS (horizontal scroll) */}
+        <div className="md:hidden -mx-4 px-4 mb-4 flex gap-2 overflow-x-auto pb-2">
+          {items.map((tab, index) => {
+            const Icon = tab.icon;
+            const isActive = activeTab === index;
+            return (
+              <button
+                key={index}
+                onClick={() => setActiveTab(index)}
+                className={`flex shrink-0 items-center gap-2 px-3.5 py-2 rounded-full text-sm font-medium border transition-colors ${
+                  isActive
+                    ? "bg-primary/10 border-primary text-primary"
+                    : "border-border text-foreground/70"
+                }`}
+              >
+                <Icon className="w-4 h-4" />
+                {tab.label}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* FLOATING TABS (desktop) */}
+        <div className="hidden md:block absolute left-2 bottom-16 z-20">
           <div className="bg-background rounded-[28px] shadow-xl border border-border p-3 w-[240px]">
             <div className="flex flex-col gap-2">
               {items.map((tab, index) => {
@@ -161,12 +183,20 @@ export default function ClippedVideoTab() {
 
         {/* VIDEO CONTAINER */}
         <div
-          className="relative overflow-hidden h-[690px]"
+          className="relative overflow-hidden h-[440px] sm:h-[560px] md:h-[690px] bg-gradient-to-br from-[#241812] via-[#311f15] to-[#3e2517]"
           style={{
             clipPath: "polygon(0 0, 92% 0, 100% 12%, 100% 100%, 30% 100%, 22% 88%, 0 88%)",
             borderRadius: "34px",
           }}
         >
+          {/* Warm glow fallback so the area is never bare if the video is slow/blocked */}
+          <div
+            className="absolute inset-0 opacity-70"
+            style={{
+              background:
+                "radial-gradient(ellipse 70% 60% at 50% 0%, hsl(14 80% 55% / 0.35), transparent 70%), radial-gradient(ellipse 60% 50% at 90% 100%, hsl(32 80% 55% / 0.25), transparent 70%)",
+            }}
+          />
           {/* VIDEO */}
           <AnimatePresence mode="wait">
             <motion.video
@@ -196,7 +226,7 @@ export default function ClippedVideoTab() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 14 }}
                 transition={{ duration: 0.35 }}
-                className="w-[320px] rounded-[26px] border border-white/30 bg-white/85 backdrop-blur-xl shadow-2xl p-5"
+                className="w-[88%] max-w-[320px] rounded-[26px] border border-white/30 bg-white/85 backdrop-blur-xl shadow-2xl p-5"
               >
                 {/* HEADER */}
                 <div className="flex items-center justify-between">

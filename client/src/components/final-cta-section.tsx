@@ -71,7 +71,7 @@ export function FinalCtaSection() {
           <div className="relative text-center max-w-2xl mx-auto">
             <span className="inline-flex items-center gap-2 rounded-full border border-background/20 bg-background/10 px-3 py-1 font-mono text-[11px] font-medium uppercase tracking-[0.16em] text-background/80 backdrop-blur">
               <span className="w-1.5 h-1.5 rounded-full bg-primary" />
-              Get started
+              Get access today
             </span>
 
             <h2
@@ -112,7 +112,7 @@ export function FinalCtaSection() {
                 data-testid="button-final-cta"
               >
                 {mutation.isPending ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
-                Get Started
+                Get Access
                 {!mutation.isPending && <ArrowRight className="w-4 h-4 ml-1" />}
               </Button>
             </form>

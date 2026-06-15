@@ -255,25 +255,27 @@ export default function IndustryPage() {
   const { toast } = useToast();
   const { ref: hpRef, isBot } = useHoneypot();
 
+  // Open the discovery-call prompt once the visitor has scrolled a bit
+  // (not immediately on load), only on the real-estate page.
   useEffect(() => {
-    if (slug === "real-estate") {
-      const t = setTimeout(() => setQualifyOpen(true), 600);
-      return () => clearTimeout(t);
-    }
+    if (slug !== "real-estate") return;
+    let fired = false;
+    const onScroll = () => {
+      if (!fired && window.scrollY > 700) {
+        fired = true;
+        setQualifyOpen(true);
+        window.removeEventListener("scroll", onScroll);
+      }
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, [slug]);
 
-  function handleQualify(choice: "solo" | "team") {
+  // Never send to Stripe. Both choices route to the demo / lead form.
+  function handleQualify(_choice: "solo" | "team") {
     setQualifyOpen(false);
-    if (choice === "solo") {
-      window.location.href = "https://buy.stripe.com/fZudR2g325kJgRh3i0eUU0v";
-    } else {
-      const el = document.getElementById("enterprise");
-      if (el) {
-        el.scrollIntoView({ behavior: "smooth" });
-      } else {
-        window.location.href = "/#enterprise";
-      }
-    }
+    const el = document.getElementById("get-demo");
+    if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
   }
 
   const mutation = useMutation({
@@ -324,9 +326,9 @@ export default function IndustryPage() {
       <Dialog open={qualifyOpen} onOpenChange={setQualifyOpen}>
         <DialogContent className="sm:max-w-md" data-testid="dialog-qualify">
           <DialogHeader>
-            <DialogTitle className="font-display text-2xl font-semibold tracking-tight">Let's tailor your plan</DialogTitle>
+            <DialogTitle className="font-display text-2xl font-semibold tracking-tight">Get a free discovery call + demo</DialogTitle>
             <DialogDescription className="text-base">
-              Which best describes you? We'll send you to the right starting point.
+              Tell us where you're at and we'll set up a personalized walkthrough — no commitment.
             </DialogDescription>
           </DialogHeader>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2">
@@ -343,7 +345,7 @@ export default function IndustryPage() {
               <div className="text-xs text-muted-foreground leading-snug">
                 I run my own book of business
               </div>
-              <div className="text-xs font-semibold text-primary mt-1">Start at $98/mo →</div>
+              <div className="text-xs font-semibold text-primary mt-1">Book my demo →</div>
             </button>
             <button
               type="button"
@@ -358,11 +360,11 @@ export default function IndustryPage() {
               <div className="text-xs text-muted-foreground leading-snug">
                 I lead a team or brokerage
               </div>
-              <div className="text-xs font-semibold text-primary mt-1">Get a custom plan →</div>
+              <div className="text-xs font-semibold text-primary mt-1">Book my demo →</div>
             </button>
           </div>
           <p className="text-[11px] text-muted-foreground text-center mt-2">
-            Not sure? Pick Team Owner — we'll talk it through with you.
+            Free 15-minute call + live demo. No commitment.
           </p>
         </DialogContent>
       </Dialog>
@@ -417,8 +419,9 @@ export default function IndustryPage() {
             className="flex flex-col items-center gap-3"
           >
             <form
+              id="get-demo"
               onSubmit={handleSubmit}
-              className="flex flex-col sm:flex-row items-center justify-center gap-2 w-full max-w-md"
+              className="flex flex-col sm:flex-row items-center justify-center gap-2 w-full max-w-md scroll-mt-28"
             >
               <HoneypotInput inputRef={hpRef} />
               <Input

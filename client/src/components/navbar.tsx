@@ -311,7 +311,18 @@ export function Navbar() {
               {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
             </Button>
 
-            <a href="#contact">
+            <a
+              href="https://ai.blacksync.network/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hidden sm:inline-flex"
+            >
+              <Button variant="ghost" size="sm" data-testid="button-login">
+                Log in
+              </Button>
+            </a>
+
+            <a href="#contact" className="hidden sm:inline-flex">
               <Button variant="ghost" size="sm" data-testid="button-talk-sales">
                 Talk to Sales
               </Button>
@@ -552,7 +563,19 @@ export function Navbar() {
                 </a>
               ))}
 
-              <div className="flex gap-2 mt-4 px-2">
+              <a
+                href="https://ai.blacksync.network/"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setMobileOpen(false)}
+                className="block mt-4 px-2"
+                data-testid="link-mobile-login"
+              >
+                <Button variant="ghost" className="w-full justify-start" size="sm">
+                  Log in
+                </Button>
+              </a>
+              <div className="flex gap-2 mt-2 px-2">
                 <a href="#contact" onClick={() => setMobileOpen(false)} className="flex-1">
                   <Button variant="outline" className="w-full" size="sm">
                     Talk to Sales

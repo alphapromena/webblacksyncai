@@ -129,36 +129,6 @@ export function SocialProofSection() {
           ))}
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-14">
-          {testimonials.map((t, i) => (
-            <motion.div
-              key={t.name}
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: i * 0.08 }}
-              className="rounded-2xl border bg-card p-7 flex flex-col shadow-sm hover:shadow-md transition-shadow"
-              data-testid={`card-social-testimonial-${i}`}
-            >
-              <blockquote className="text-sm leading-relaxed text-foreground/90 mb-6 flex-1 text-pretty">
-                "{t.quote}"
-              </blockquote>
-              <div className="flex items-center gap-3">
-                <div
-                  className="w-10 h-10 rounded-full flex items-center justify-center text-xs font-semibold bg-accent text-accent-foreground"
-                  data-testid={`avatar-testimonial-${i}`}
-                >
-                  {t.initials}
-                </div>
-                <div>
-                  <p className="text-sm font-semibold text-foreground">{t.name}</p>
-                  <p className="text-xs text-muted-foreground">{t.role}</p>
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-
         <Reveal>
           <p className="text-center font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground mb-6">
             Plugs into the tools your team already runs on
