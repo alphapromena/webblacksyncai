@@ -3,6 +3,9 @@
 // the visitor here to finish getting access — prefilled where possible.
 export const REGISTER_URL = "https://ai.blacksync.network/register";
 
+// Free 15-minute discovery call booking (Cal.com).
+export const BOOK_CALL_URL = "https://cal.com/hello-blacksync.ai/15min";
+
 type LeadLike = {
   email?: string;
   name?: string;

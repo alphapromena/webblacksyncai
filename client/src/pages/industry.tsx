@@ -25,7 +25,7 @@ import { useMutation } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { useHoneypot, HoneypotInput } from "@/components/ui/honeypot";
-import { goToRegister } from "@/lib/register";
+import { goToRegister, BOOK_CALL_URL } from "@/lib/register";
 import {
   Dialog,
   DialogContent,
@@ -272,11 +272,10 @@ export default function IndustryPage() {
     return () => window.removeEventListener("scroll", onScroll);
   }, [slug]);
 
-  // Never send to Stripe. Both choices route to the demo / lead form.
+  // Both choices book a free 15-min discovery call. Never Stripe.
   function handleQualify(_choice: "solo" | "team") {
     setQualifyOpen(false);
-    const el = document.getElementById("get-demo");
-    if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
+    window.open(BOOK_CALL_URL, "_blank", "noopener");
   }
 
   const mutation = useMutation({
@@ -367,6 +366,14 @@ export default function IndustryPage() {
           <p className="text-[11px] text-muted-foreground text-center mt-2">
             Free 15-minute call + live demo. No commitment.
           </p>
+          <button
+            type="button"
+            onClick={() => setQualifyOpen(false)}
+            className="mx-auto block text-xs text-muted-foreground hover:text-foreground transition-colors"
+            data-testid="button-qualify-skip"
+          >
+            Skip for now
+          </button>
         </DialogContent>
       </Dialog>
 

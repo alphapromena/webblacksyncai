@@ -26,7 +26,7 @@ import {
 } from "@/components/ui/dialog";
 import { Link } from "wouter";
 import { useHoneypot, HoneypotInput } from "@/components/ui/honeypot";
-import { goToRegister } from "@/lib/register";
+import { goToRegister, BOOK_CALL_URL } from "@/lib/register";
 
 const INDUSTRY_OPTIONS = [
   "Real Estate",
@@ -259,11 +259,13 @@ export function HeroSection() {
             </span>
             <span className="hidden sm:inline w-px h-4 bg-border" aria-hidden="true" />
             <a
-              href="#enterprise"
+              href={BOOK_CALL_URL}
+              target="_blank"
+              rel="noopener noreferrer"
               className="text-muted-foreground hover:text-foreground font-medium transition-colors"
               data-testid="link-hero-demo"
             >
-              or Book a 15-min demo <ArrowRight className="w-3 h-3 inline ml-0.5" />
+              or Book a free 15-min call <ArrowRight className="w-3 h-3 inline ml-0.5" />
             </a>
           </motion.div>
 

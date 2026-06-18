@@ -39,6 +39,8 @@ import {
   Search,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { StartTrialDialog } from "@/components/start-trial-dialog";
+import { BOOK_CALL_URL } from "@/lib/register";
 
 type MegaColumn = {
   heading: string;
@@ -322,17 +324,17 @@ export function Navbar() {
               </Button>
             </a>
 
-            <a href="#contact" className="hidden sm:inline-flex">
+            <a href={BOOK_CALL_URL} target="_blank" rel="noopener noreferrer" className="hidden sm:inline-flex">
               <Button variant="ghost" size="sm" data-testid="button-talk-sales">
-                Talk to Sales
+                Book a Call
               </Button>
             </a>
 
-            <a href="https://ai.blacksync.network/register">
+            <StartTrialDialog>
               <Button size="sm" data-testid="button-get-started">
                 Start Free
               </Button>
-            </a>
+            </StartTrialDialog>
 
             <Button
               size="icon"
@@ -576,16 +578,18 @@ export function Navbar() {
                 </Button>
               </a>
               <div className="flex gap-2 mt-2 px-2">
-                <a href="#contact" onClick={() => setMobileOpen(false)} className="flex-1">
+                <a href={BOOK_CALL_URL} target="_blank" rel="noopener noreferrer" onClick={() => setMobileOpen(false)} className="flex-1">
                   <Button variant="outline" className="w-full" size="sm">
-                    Talk to Sales
+                    Book a Call
                   </Button>
                 </a>
-                <a href="https://ai.blacksync.network/register" onClick={() => setMobileOpen(false)} className="flex-1">
-                  <Button className="w-full" size="sm">
-                    Start Free
-                  </Button>
-                </a>
+                <div className="flex-1">
+                  <StartTrialDialog onOpen={() => setMobileOpen(false)}>
+                    <Button className="w-full" size="sm">
+                      Start Free
+                    </Button>
+                  </StartTrialDialog>
+                </div>
               </div>
             </div>
           </motion.div>
