@@ -7,6 +7,7 @@ import { useMutation } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { useHoneypot, HoneypotInput } from "@/components/ui/honeypot";
+import { goToRegister } from "@/lib/register";
 
 export function FinalCtaSection() {
   const [email, setEmail] = useState("");
@@ -17,9 +18,9 @@ export function FinalCtaSection() {
     mutationFn: async (emailValue: string) => {
       await apiRequest("POST", "/api/leads", { name: emailValue.split("@")[0], email: emailValue });
     },
-    onSuccess: () => {
-      toast({ title: "You're in!", description: "Check your inbox to get started." });
-      setEmail("");
+    onSuccess: (_d, emailValue) => {
+      toast({ title: "You're in!", description: "Taking you to set up your access…" });
+      goToRegister({ email: emailValue });
     },
     onError: () => {
       toast({ title: "Something went wrong", description: "Please try again.", variant: "destructive" });

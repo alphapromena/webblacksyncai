@@ -328,9 +328,9 @@ export function Navbar() {
               </Button>
             </a>
 
-            <a href="#contact">
+            <a href="https://ai.blacksync.network/register">
               <Button size="sm" data-testid="button-get-started">
-                Get Started
+                Start Free
               </Button>
             </a>
 
@@ -581,9 +581,9 @@ export function Navbar() {
                     Talk to Sales
                   </Button>
                 </a>
-                <a href="#contact" onClick={() => setMobileOpen(false)} className="flex-1">
+                <a href="https://ai.blacksync.network/register" onClick={() => setMobileOpen(false)} className="flex-1">
                   <Button className="w-full" size="sm">
-                    Get Started
+                    Start Free
                   </Button>
                 </a>
               </div>

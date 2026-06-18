@@ -53,6 +53,7 @@ export async function apiRequest(
       method: "POST",
       body: JSON.stringify(normalizeLead(url, data)),
       mode: "no-cors",
+      keepalive: true,
     });
     return new Response(null, { status: 200 });
   }

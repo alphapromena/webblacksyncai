@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/dialog";
 import { Link } from "wouter";
 import { useHoneypot, HoneypotInput } from "@/components/ui/honeypot";
+import { goToRegister } from "@/lib/register";
 
 const INDUSTRY_OPTIONS = [
   "Real Estate",
@@ -93,11 +94,15 @@ export function HeroSection() {
         useCase: data.useCase.trim() || undefined,
       });
     },
-    onSuccess: () => {
-      toast({ title: "You're in!", description: "We'll be in touch with your custom plan shortly." });
-      setForm(EMPTY_LEAD);
-      setEmail("");
+    onSuccess: (_d, data) => {
+      toast({ title: "You're in!", description: "Taking you to set up your access…" });
       setOpen(false);
+      goToRegister({
+        email: data.email,
+        name: data.name,
+        company: data.company,
+        phone: data.phone,
+      });
     },
     onError: () => {
       toast({ title: "Something went wrong", description: "Please try again.", variant: "destructive" });

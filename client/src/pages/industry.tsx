@@ -25,6 +25,7 @@ import { useMutation } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { useHoneypot, HoneypotInput } from "@/components/ui/honeypot";
+import { goToRegister } from "@/lib/register";
 import {
   Dialog,
   DialogContent,
@@ -286,9 +287,9 @@ export default function IndustryPage() {
         company: industry.name,
       });
     },
-    onSuccess: () => {
-      toast({ title: "You're in!", description: "We'll be in touch shortly." });
-      setEmail("");
+    onSuccess: (_d, emailValue) => {
+      toast({ title: "You're in!", description: "Taking you to set up your access…" });
+      goToRegister({ email: emailValue, company: industry.name });
     },
     onError: () => {
       toast({
