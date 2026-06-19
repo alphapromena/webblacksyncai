@@ -37,3 +37,5 @@ jobs:
           URL=$(vercel deploy --prebuilt --prod --token="${{ secrets.VERCEL_TOKEN }}" 2>&1 | tee /dev/stderr | tail -1)
           echo "### ✅ Promoted to production: $URL" >> "$GITHUB_STEP_SUMMARY"
           echo "### Domain: https://blacksync.ai" >> "$GITHUB_STEP_SUMMARY"
+
+# trigger: 20260619T065344Z
