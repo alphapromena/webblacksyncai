@@ -48,11 +48,19 @@ Two conversion paths:
 - When teamSize or useCase present, creates a Note (`title`, `bodyV2.markdown` with name/email/phone/company/industry/team size/use case) and links it to the opportunity via `POST /rest/noteTargets {noteId, targetOpportunityId}`.
 - `industryLabel()` maps known industry slugs (e.g. "real-estate", "mortgage") to display labels; unknown values pass through unchanged.
 
-## Theme
-- Warm earthy/terracotta palette
-- Light mode: Background #F1F0E5, Foreground #56453F, Primary #A37764, Secondary #BAAB92, Accent #E4C7B8
-- Dark mode: warm dark browns with lighter terracotta accents
-- DM Sans font family
+## Theme — Design System v2 ("Light + Bold Contrast")
+- Direction: warm-white canvas, near-black bold display headlines, generous whitespace,
+  crisp 1px borders, ONE bold terracotta accent used sparingly, real layered shadows.
+  Vercel/Linear marketing energy. Full spec in `DESIGN.md`.
+- Light mode: Background warm white `hsl(40 33% 99%)`, Foreground warm near-black
+  `hsl(22 16% 11%)`, Primary bold terracotta `hsl(14 76% 49%)`, Accent soft peach.
+- Dark mode: warm near-black surfaces with brighter terracotta accent (toggle supported).
+- Typography: `font-display` Space Grotesk (headings), `font-sans` Geist (body),
+  `font-mono` Geist Mono (uppercase eyebrows), `font-serif` Playfair (rare italic).
+- Shared section primitives in `client/src/components/ui/section.tsx`:
+  `Eyebrow`, `Reveal` (scroll fade-up), `SectionHeading`.
+- Key utilities (index.css): `.text-accent-grad`, `.eyebrow`, `.hero-gradient`,
+  `.grid-bg`, `.dot-bg`, `.card-glow`, `.animate-marquee`, `.text-balance`.
 
 ## Stripe Integration
 - Not yet connected. Set STRIPE_SECRET_KEY environment variable when ready.

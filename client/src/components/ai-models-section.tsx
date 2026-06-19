@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
 import { ArrowRight, Globe } from "lucide-react";
 import { Link } from "wouter";
+import { Eyebrow, Reveal } from "@/components/ui/section";
 
 const models = [
   { name: "GPT-5", provider: "OpenAI", short: "GPT-5", color: "bg-emerald-500", premium: true },
@@ -27,100 +28,101 @@ export function AIModelsSection() {
     <section
       id="ai-models"
       data-testid="section-ai-models"
-      className="py-16 md:py-20 relative"
+      className="py-20 md:py-28 relative"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="grid md:grid-cols-2 gap-10 items-center border border-border bg-card p-6 md:p-10 rounded-3xl"
-        >
-          {/* LEFT */}
-          <div>
-            <p
-              className="uppercase text-xs font-semibold tracking-widest text-primary"
-              data-testid="text-ai-models-eyebrow"
-            >
-              AI Models
-            </p>
-            <h2
-              className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mt-3 mb-5 leading-[1.05]"
-              data-testid="text-ai-models-headline"
-            >
-              Powered by the world's most{" "}
-              <span className="gradient-text">advanced AI</span>
-            </h2>
-            <p
-              className="text-muted-foreground text-base md:text-lg leading-relaxed mb-6 max-w-lg"
-              data-testid="text-ai-models-subhead"
-            >
-              Choose your model. Every plan includes access to GPT-5, Claude,
-              Gemini, and more — you pick what runs your agent.
-            </p>
+        <Reveal>
+          <div className="relative grid md:grid-cols-2 gap-10 md:gap-12 items-center rounded-[2rem] border border-card-border bg-card p-7 md:p-12 shadow-lg overflow-hidden">
+            {/* subtle inner texture */}
+            <div
+              className="dot-bg pointer-events-none absolute inset-0 opacity-[0.35]"
+              aria-hidden="true"
+            />
+            <div
+              className="pointer-events-none absolute -top-24 -right-24 h-64 w-64 rounded-full bg-primary/10 blur-3xl"
+              aria-hidden="true"
+            />
 
-            <div className="flex flex-wrap gap-3 mb-6">
-              <Link href="/pricing">
-                <Button size="lg" data-testid="button-ai-models-pricing">
-                  See Pricing
-                  <ArrowRight className="w-4 h-4 ml-2" />
-                </Button>
-              </Link>
-              <a href="#enterprise">
-                <Button
-                  variant="outline"
-                  size="lg"
-                  data-testid="button-ai-models-enterprise"
-                >
-                  Talk to Sales →
-                </Button>
-              </a>
-            </div>
-
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Globe className="w-4 h-4" />
-              <p data-testid="text-languages-supported">
-                40+ languages including English, Spanish, Arabic, Mandarin, French, Portuguese & Hindi.
-              </p>
-            </div>
-          </div>
-
-          {/* RIGHT */}
-          <div className="grid grid-cols-3 sm:grid-cols-5 gap-3">
-            {models.map((model, idx) => (
-              <motion.div
-                key={model.name}
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.3, delay: idx * 0.03 }}
-                className="relative aspect-square p-2 bg-background border-2 border-border flex flex-col items-center justify-center text-center group hover:border-primary transition-colors duration-300 cursor-default"
-                style={{
-                  clipPath:
-                    "polygon(25% 0%, 75% 0%, 100% 25%, 100% 75%, 75% 100%, 25% 100%, 0% 75%, 0% 25%)",
-                }}
-                data-testid={`tile-model-${idx}`}
-                title={`${model.name} · ${model.provider}`}
+            {/* LEFT */}
+            <div className="relative">
+              <Eyebrow data-testid="text-ai-models-eyebrow">AI Models</Eyebrow>
+              <h2
+                className="mt-5 font-display text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight leading-[1.05] text-balance"
+                data-testid="text-ai-models-headline"
               >
-                <div
-                  className={`w-2 h-2 rounded-full ${model.color} mb-1`}
-                />
-                <span className="text-[10px] sm:text-[11px] font-semibold leading-tight text-foreground">
-                  {model.short}
-                </span>
-                {model.premium && (
-                  <Badge
-                    variant="secondary"
-                    className="mt-1 text-[8px] px-1.5 py-0 h-3.5 leading-none"
+                Powered by the world's most{" "}
+                <span className="text-accent-grad">advanced AI</span>
+              </h2>
+              <p
+                className="mt-4 text-muted-foreground text-base md:text-lg leading-relaxed text-pretty max-w-lg"
+                data-testid="text-ai-models-subhead"
+              >
+                Choose your model. Every plan includes access to GPT-5, Claude,
+                Gemini, and more — you pick what runs your agent.
+              </p>
+
+              <div className="flex flex-wrap gap-3 mt-7">
+                <Link href="/pricing">
+                  <Button size="lg" data-testid="button-ai-models-pricing">
+                    See Pricing
+                    <ArrowRight className="w-4 h-4 ml-2" />
+                  </Button>
+                </Link>
+                <a href="#enterprise">
+                  <Button
+                    variant="outline"
+                    size="lg"
+                    data-testid="button-ai-models-enterprise"
                   >
-                    PRO
-                  </Badge>
-                )}
-              </motion.div>
-            ))}
+                    Talk to Sales →
+                  </Button>
+                </a>
+              </div>
+
+              <div className="mt-7 flex items-center gap-2 text-sm text-muted-foreground">
+                <Globe className="w-4 h-4 text-primary shrink-0" />
+                <p data-testid="text-languages-supported">
+                  40+ languages including English, Spanish, Arabic, Mandarin, French, Portuguese & Hindi.
+                </p>
+              </div>
+            </div>
+
+            {/* RIGHT */}
+            <div className="relative grid grid-cols-3 sm:grid-cols-5 gap-2.5">
+              {models.map((model, idx) => (
+                <motion.div
+                  key={model.name}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.3, delay: idx * 0.03 }}
+                  className="group relative aspect-square p-2 bg-background border border-border flex flex-col items-center justify-center text-center shadow-sm hover:border-primary hover:shadow-md transition-all duration-300 cursor-default"
+                  style={{
+                    clipPath:
+                      "polygon(25% 0%, 75% 0%, 100% 25%, 100% 75%, 75% 100%, 25% 100%, 0% 75%, 0% 25%)",
+                  }}
+                  data-testid={`tile-model-${idx}`}
+                  title={`${model.name} · ${model.provider}`}
+                >
+                  <div
+                    className={`w-2 h-2 rounded-full ${model.color} mb-1 ring-2 ring-transparent group-hover:ring-primary/20 transition-all`}
+                  />
+                  <span className="font-display text-[10px] sm:text-[11px] font-semibold leading-tight text-foreground">
+                    {model.short}
+                  </span>
+                  {model.premium && (
+                    <Badge
+                      variant="secondary"
+                      className="mt-1 font-mono text-[8px] px-1.5 py-0 h-3.5 leading-none tracking-wider"
+                    >
+                      PRO
+                    </Badge>
+                  )}
+                </motion.div>
+              ))}
+            </div>
           </div>
-        </motion.div>
+        </Reveal>
       </div>
     </section>
   );

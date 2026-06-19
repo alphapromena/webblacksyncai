@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
@@ -26,6 +25,8 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { Link } from "wouter";
+import { useHoneypot, HoneypotInput } from "@/components/ui/honeypot";
+import { goToRegister, BOOK_CALL_URL } from "@/lib/register";
 
 const INDUSTRY_OPTIONS = [
   "Real Estate",
@@ -75,6 +76,7 @@ export function HeroSection() {
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState<HeroLead>(EMPTY_LEAD);
   const { toast } = useToast();
+  const { ref: hpRef, isBot } = useHoneypot();
 
   function update<K extends keyof HeroLead>(key: K, value: HeroLead[K]) {
     setForm((prev) => ({ ...prev, [key]: value }));
@@ -92,11 +94,15 @@ export function HeroSection() {
         useCase: data.useCase.trim() || undefined,
       });
     },
-    onSuccess: () => {
-      toast({ title: "You're in!", description: "We'll be in touch with your custom plan shortly." });
-      setForm(EMPTY_LEAD);
-      setEmail("");
+    onSuccess: (_d, data) => {
+      toast({ title: "You're in!", description: "Taking you to set up your access…" });
       setOpen(false);
+      goToRegister({
+        email: data.email,
+        name: data.name,
+        company: data.company,
+        phone: data.phone,
+      });
     },
     onError: () => {
       toast({ title: "Something went wrong", description: "Please try again.", variant: "destructive" });
@@ -119,15 +125,56 @@ export function HeroSection() {
       toast({ title: "Pick your industry", description: "This helps us tailor your plan.", variant: "destructive" });
       return;
     }
+    if (isBot()) {
+      toast({ title: "You're in!", description: "We'll be in touch with your custom plan shortly." });
+      setForm(EMPTY_LEAD);
+      setEmail("");
+      setOpen(false);
+      return;
+    }
     mutation.mutate(form);
   }
 
   return (
     <section
       data-testid="section-hero"
-      className="relative pt-24 pb-8 md:pt-32 md:pb-12 hero-gradient overflow-hidden"
+      className="relative pt-28 pb-10 md:pt-36 md:pb-16 hero-gradient overflow-hidden"
     >
-      <div className="absolute inset-0 grid-bg opacity-40 dark:opacity-20" />
+      <div className="absolute inset-0 grid-bg opacity-60 dark:opacity-30" />
+
+      {/* Floating 3D orbs — glossy spheres for depth */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+        <motion.div
+          animate={{ y: [0, -22, 0], rotate: [0, 6, 0] }}
+          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute top-24 left-[6%] w-36 h-36 md:w-44 md:h-44 rounded-full opacity-90"
+          style={{
+            background: "radial-gradient(circle at 32% 28%, #ffe2cf 0%, #f08a4f 42%, #c5491f 74%, #8f300f 100%)",
+            boxShadow:
+              "0 40px 70px -20px rgba(170,65,25,0.45), inset -10px -14px 34px rgba(110,35,10,0.55), inset 8px 10px 26px rgba(255,225,205,0.75)",
+          }}
+        />
+        <motion.div
+          animate={{ y: [0, 18, 0], rotate: [0, -8, 0] }}
+          transition={{ duration: 13, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute top-[42%] right-[7%] w-24 h-24 md:w-28 md:h-28 rounded-full opacity-80"
+          style={{
+            background: "radial-gradient(circle at 34% 30%, #fff0d8 0%, #f4b56a 44%, #d98a35 76%, #a8631f 100%)",
+            boxShadow:
+              "0 34px 60px -18px rgba(180,110,40,0.4), inset -8px -12px 28px rgba(130,80,20,0.5), inset 7px 9px 22px rgba(255,240,215,0.8)",
+          }}
+        />
+        <motion.div
+          animate={{ y: [0, -14, 0] }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute bottom-16 left-[16%] w-16 h-16 md:w-20 md:h-20 rounded-full opacity-70"
+          style={{
+            background: "radial-gradient(circle at 32% 28%, #ffe7d6 0%, #ef8a52 46%, #b5421a 100%)",
+            boxShadow:
+              "0 24px 44px -14px rgba(170,65,25,0.4), inset -6px -9px 22px rgba(110,35,10,0.5), inset 5px 7px 16px rgba(255,225,205,0.7)",
+          }}
+        />
+      </div>
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
         {/* Centered headline + CTAs */}
@@ -135,57 +182,63 @@ export function HeroSection() {
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
+            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            className="flex justify-center"
           >
-            <Badge variant="secondary" className="mb-5" data-testid="badge-hero-eyebrow">
-              AI-Powered Outbound · 40+ Languages · GPT-5 · Claude · Gemini
-            </Badge>
+            <span className="eyebrow" data-testid="badge-hero-eyebrow">
+              <span className="relative flex w-1.5 h-1.5">
+                <span className="absolute inline-flex h-full w-full rounded-full bg-primary opacity-75 animate-ping" />
+                <span className="relative inline-flex w-1.5 h-1.5 rounded-full bg-primary" />
+              </span>
+              AI Outbound · 40+ Languages · GPT-5 · Claude · Gemini
+            </span>
           </motion.div>
 
           <motion.h1
-            initial={{ opacity: 0, y: 16 }}
+            initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.08 }}
-            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.05] mb-5"
+            transition={{ duration: 0.55, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
+            className="mt-6 font-display text-[2.75rem] leading-[1.02] sm:text-6xl md:text-7xl font-semibold tracking-[-0.03em] mb-5 text-balance"
             data-testid="text-hero-headline"
           >
-            Hundreds of outbound calls.{" "}
-            <span className="gradient-text italic font-serif">Zero extra hires.</span>
+            Hundreds of outbound calls.
+            <br className="hidden sm:block" />{" "}
+            <span className="text-accent-grad">Zero extra hires.</span>
           </motion.h1>
 
           <motion.p
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.16 }}
-            className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto mb-8 leading-relaxed"
+            transition={{ duration: 0.5, delay: 0.16, ease: [0.16, 1, 0.3, 1] }}
+            className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-9 leading-relaxed text-pretty"
             data-testid="text-hero-subheadline"
           >
-            Describe what you need. BlackSync's AI builds your agent, writes
-            your scripts, connects your calendar, and starts calling leads — in
-            minutes.
+            Hundreds of personalized calls in minutes, not days. Your AI voice
+            agents reach every new lead, qualify them, and book the appointment —
+            so your team spends its time with people ready to talk.
           </motion.p>
 
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.24 }}
-            className="flex flex-col items-center gap-3 mb-4"
+            transition={{ duration: 0.5, delay: 0.24, ease: [0.16, 1, 0.3, 1] }}
+            className="flex flex-col items-center gap-4 mb-5"
           >
             <form
               onSubmit={handleStart}
-              className="flex flex-col sm:flex-row items-center justify-center gap-2 w-full max-w-md"
+              className="flex flex-col sm:flex-row items-center justify-center gap-2.5 w-full max-w-md p-1.5 sm:rounded-2xl sm:border sm:border-border sm:bg-card sm:shadow-lg"
             >
               <Input
                 type="email"
                 placeholder="Enter your work email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="flex-1"
+                className="flex-1 h-12 sm:border-transparent sm:bg-transparent sm:shadow-none sm:focus-visible:ring-0"
                 data-testid="input-hero-email"
               />
-              <Button size="lg" type="submit" data-testid="button-hero-cta">
+              <Button size="lg" type="submit" className="w-full sm:w-auto" data-testid="button-hero-cta">
                 Get Started
-                <ArrowRight className="w-4 h-4 ml-2" />
+                <ArrowRight className="w-4 h-4 ml-1" />
               </Button>
             </form>
 
@@ -198,15 +251,21 @@ export function HeroSection() {
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.28 }}
-            className="mb-12"
+            transition={{ duration: 0.5, delay: 0.32, ease: [0.16, 1, 0.3, 1] }}
+            className="mb-14 flex items-center justify-center gap-4 text-sm"
           >
+            <span className="flex items-center gap-1.5 text-muted-foreground">
+              <span className="text-primary">★★★★★</span> 4.9 average
+            </span>
+            <span className="hidden sm:inline w-px h-4 bg-border" aria-hidden="true" />
             <a
-              href="#enterprise"
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+              href={BOOK_CALL_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-muted-foreground hover:text-foreground font-medium transition-colors"
               data-testid="link-hero-demo"
             >
-              or Book a 15-min demo <ArrowRight className="w-3 h-3 inline ml-0.5" />
+              or Book a free 15-min call <ArrowRight className="w-3 h-3 inline ml-0.5" />
             </a>
           </motion.div>
 
@@ -288,6 +347,7 @@ export function HeroSection() {
           </DialogHeader>
 
           <form onSubmit={handleSubmit} className="space-y-4 pt-1">
+            <HoneypotInput inputRef={hpRef} />
             <div className="space-y-1.5">
               <Label htmlFor="hero-name">Your name</Label>
               <Input

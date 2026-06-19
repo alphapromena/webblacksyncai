@@ -1,10 +1,19 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
+import { SectionHeading, Reveal } from "@/components/ui/section";
 import followUpBossLogo from "@assets/logos/followupboss.png";
 import sierraInteractiveLogo from "@assets/logos/sierra-interactive.png";
 import kvcoreLogo from "@assets/logos/kvcore.png";
 import boomtownLogo from "@assets/logos/boomtown.png";
 import loftyLogo from "@assets/logos/lofty.png";
+import realGeeksLogo from "@assets/logos/realgeeks.svg";
+import cincLogo from "@assets/logos/cinc.svg";
+import zillowLogo from "@assets/logos/zillow.svg";
+import realtorLogo from "@assets/logos/realtorcom.svg";
+import calendlyLogo from "@assets/logos/calendly.svg";
+import hubspotLogo from "@assets/logos/hubspot.svg";
+import salesforceLogo from "@assets/logos/salesforce.svg";
+import zapierLogo from "@assets/logos/zapier.svg";
 
 const stats = [
   { value: 3.2, suffix: "x", decimals: 1, label: "More appointments booked vs. human ISAs" },
@@ -39,6 +48,14 @@ const trustedBy = [
   { name: "kvCORE", src: kvcoreLogo, height: "h-6 md:h-7" },
   { name: "BoomTown", src: boomtownLogo, height: "h-9 md:h-10" },
   { name: "Lofty", src: loftyLogo, height: "h-7 md:h-8" },
+  { name: "Real Geeks", src: realGeeksLogo, height: "h-5 md:h-6" },
+  { name: "CINC", src: cincLogo, height: "h-5 md:h-6" },
+  { name: "Zillow", src: zillowLogo, height: "h-5 md:h-6" },
+  { name: "realtor.com", src: realtorLogo, height: "h-5 md:h-6" },
+  { name: "HubSpot", src: hubspotLogo, height: "h-5 md:h-6" },
+  { name: "Salesforce", src: salesforceLogo, height: "h-5 md:h-6" },
+  { name: "Calendly", src: calendlyLogo, height: "h-5 md:h-6" },
+  { name: "Zapier", src: zapierLogo, height: "h-5 md:h-6" },
 ];
 
 function AnimatedCounter({ value, suffix, decimals }: { value: number; suffix: string; decimals: number }) {
@@ -74,32 +91,21 @@ export function SocialProofSection() {
     <section
       id="social-proof"
       data-testid="section-social-proof"
-      className="py-16 md:py-24 relative bg-background"
+      className="py-20 md:py-28 relative bg-background"
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.4 }}
-          className="text-center mb-12"
-        >
-          <span
-            className="inline-block px-4 py-1.5 rounded-full bg-card border border-border text-xs font-medium text-foreground/70 mb-5"
-            data-testid="pill-results"
-          >
-            Results
-          </span>
-          <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-foreground">
-            Real teams. Real{" "}
-            <span
-              className="italic"
-              style={{ fontFamily: "var(--font-serif)", color: "#9E6B57" }}
-            >
-              booked calendars.
-            </span>
-          </h2>
-        </motion.div>
+        <SectionHeading
+          className="mb-12 md:mb-16"
+          eyebrow={<span data-testid="pill-results">Results</span>}
+          title={
+            <>
+              Real teams. Real{" "}
+              <span className="font-serif italic text-accent-grad">
+                booked calendars.
+              </span>
+            </>
+          }
+        />
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-14">
           {stats.map((s, i) => (
@@ -109,56 +115,25 @@ export function SocialProofSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.4, delay: i * 0.08 }}
-              className="rounded-2xl border border-border bg-card/60 p-6 text-center"
+              className="rounded-2xl border bg-card p-7 text-center shadow-sm hover:shadow-md transition-shadow"
               data-testid={`stat-${i}`}
             >
               <div
-                className="text-4xl md:text-5xl font-bold tracking-tight mb-2"
-                style={{ color: "#3F7D58" }}
+                className="font-display text-5xl md:text-6xl font-semibold tracking-tight mb-3 text-accent-grad"
                 data-testid={`stat-value-${i}`}
               >
                 <AnimatedCounter value={s.value} suffix={s.suffix} decimals={s.decimals} />
               </div>
-              <p className="text-sm text-muted-foreground leading-relaxed">{s.label}</p>
+              <p className="text-sm text-muted-foreground leading-relaxed text-pretty">{s.label}</p>
             </motion.div>
           ))}
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-14">
-          {testimonials.map((t, i) => (
-            <motion.div
-              key={t.name}
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: i * 0.08 }}
-              className="rounded-2xl border border-border bg-card/60 p-6 flex flex-col"
-              data-testid={`card-social-testimonial-${i}`}
-            >
-              <blockquote className="text-sm leading-relaxed text-foreground/90 mb-5 flex-1">
-                "{t.quote}"
-              </blockquote>
-              <div className="flex items-center gap-3">
-                <div
-                  className="w-10 h-10 rounded-full flex items-center justify-center text-xs font-semibold bg-accent text-accent-foreground"
-                  data-testid={`avatar-testimonial-${i}`}
-                >
-                  {t.initials}
-                </div>
-                <div>
-                  <p className="text-sm font-semibold text-foreground">{t.name}</p>
-                  <p className="text-xs text-muted-foreground">{t.role}</p>
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-
-        <div>
-          <p className="text-center text-xs uppercase tracking-[0.18em] text-muted-foreground mb-5">
-            Trusted by teams using
+        <Reveal>
+          <p className="text-center font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground mb-6">
+            Plugs into the tools your team already runs on
           </p>
-          <div className="flex flex-wrap items-center justify-center gap-x-10 gap-y-6 opacity-60">
+          <div className="flex flex-wrap items-center justify-center gap-x-8 md:gap-x-10 gap-y-6 opacity-70">
             {trustedBy.map((logo, i) => (
               <img
                 key={logo.name}
@@ -170,7 +145,7 @@ export function SocialProofSection() {
               />
             ))}
           </div>
-        </div>
+        </Reveal>
       </div>
     </section>
   );

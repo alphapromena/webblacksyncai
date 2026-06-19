@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import {
   LayoutDashboard,
   Users,
@@ -113,6 +113,23 @@ function SideBars({ side }: { side: "left" | "right" }) {
 }
 
 export function DashboardMockupSection() {
+  // Interactive 3D tilt — the panel sits in real perspective and reacts to the cursor.
+  const px = useMotionValue(0.5);
+  const py = useMotionValue(0.5);
+  // Rest pose (px=py=0.5) is a gentle 3/4 view, so it reads as 3D even without the cursor.
+  const rotateX = useSpring(useTransform(py, [0, 1], [14, 2]), { stiffness: 150, damping: 18 });
+  const rotateY = useSpring(useTransform(px, [0, 1], [-16, 6]), { stiffness: 150, damping: 18 });
+
+  function handleMove(e: React.MouseEvent<HTMLDivElement>) {
+    const r = e.currentTarget.getBoundingClientRect();
+    px.set((e.clientX - r.left) / r.width);
+    py.set((e.clientY - r.top) / r.height);
+  }
+  function handleLeave() {
+    px.set(0.5);
+    py.set(0.5);
+  }
+
   return (
     <section
       data-testid="section-dashboard-mockup"
@@ -121,16 +138,23 @@ export function DashboardMockupSection() {
       <SideBars side="left" />
       <SideBars side="right" />
 
-      <div className="relative max-w-[920px] mx-auto px-4 sm:px-6">
+      <div
+        className="relative max-w-[920px] mx-auto px-4 sm:px-6"
+        style={{ perspective: "1600px" }}
+        onMouseMove={handleMove}
+        onMouseLeave={handleLeave}
+      >
         <motion.div
           initial={{ y: 40, opacity: 0 }}
           whileInView={{ y: 0, opacity: 1 }}
           viewport={{ once: true, amount: 0.1 }}
           transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-          className="relative rounded-t-2xl overflow-hidden border border-border border-b-0 bg-[#0e0d12] text-zinc-200"
+          className="relative rounded-t-2xl overflow-hidden border border-white/10 border-b-0 bg-[#0e0d12] text-zinc-200 ring-1 ring-black/5 [transform-style:preserve-3d]"
           style={{
+            rotateX,
+            rotateY,
             boxShadow:
-              "0 -10px 40px -10px rgba(86, 69, 63, 0.2)",
+              "0 -20px 60px -20px hsl(14 76% 49% / 0.30), 0 40px 80px -40px rgba(0,0,0,0.45), 0 -2px 0 0 rgba(255,255,255,0.04)",
           }}
         >
           {/* Window chrome */}
@@ -147,7 +171,7 @@ export function DashboardMockupSection() {
             {/* Sidebar */}
             <aside className="w-[180px] shrink-0 border-r border-white/5 bg-[#0a0a0e] flex flex-col">
               <div className="px-4 py-4 flex items-center gap-2 border-b border-white/5">
-                <div className="w-6 h-6 rounded-md bg-gradient-to-br from-primary to-accent flex items-center justify-center">
+                <div className="w-6 h-6 rounded-md bg-gradient-to-br from-primary via-orange-500 to-amber-500 flex items-center justify-center">
                   <span className="text-[10px] font-bold text-white">B</span>
                 </div>
                 <span className="text-xs font-semibold tracking-tight">BlackSync</span>
@@ -246,7 +270,7 @@ export function DashboardMockupSection() {
                     }`}
                   >
                     <div className="flex items-center gap-2 min-w-0">
-                      <div className="w-5 h-5 rounded-full bg-gradient-to-br from-primary/60 to-accent/60 text-white flex items-center justify-center text-[8px] font-bold shrink-0">
+                      <div className="w-5 h-5 rounded-full bg-gradient-to-br from-primary/70 to-orange-500/70 text-white flex items-center justify-center text-[8px] font-bold shrink-0">
                         {lead.name.split(" ").map((n) => n[0]).join("")}
                       </div>
                       <span className="font-medium text-zinc-100 truncate">{lead.name}</span>

@@ -9,7 +9,6 @@ import { HowItWorksSection } from "@/components/how-it-works-section";
 import ClippedVideoTab from "@/components/ui/clipped-video-tab";
 import { SocialProofSection } from "@/components/social-proof-section";
 import { WhySection } from "@/components/why-section";
-import { TestimonialsSection } from "@/components/testimonials-section";
 import { PricingSection } from "@/components/pricing-section";
 import { EnterpriseSection } from "@/components/enterprise-section";
 import { FinalCtaSection } from "@/components/final-cta-section";
@@ -29,7 +28,6 @@ export default function Home() {
       <HowItWorksSection />
       <SocialProofSection />
       <WhySection />
-      <TestimonialsSection />
       <PricingSection />
       <EnterpriseSection />
       <FinalCtaSection />

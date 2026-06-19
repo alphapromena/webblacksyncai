@@ -1,6 +1,5 @@
-import { Badge } from "@/components/ui/badge";
-import { motion } from "framer-motion";
-import { CheckCircle, XCircle, Clock, Bot, PhoneCall, DollarSign, BarChart3, Repeat } from "lucide-react";
+import { Check, X, Clock, Bot, PhoneCall, DollarSign, BarChart3, Repeat } from "lucide-react";
+import { SectionHeading, Reveal } from "@/components/ui/section";
 
 const comparisonData = [
   { feature: "Calls leads within 60 seconds", blacksync: true, others: false },
@@ -25,71 +24,72 @@ const advantages = [
 
 export function WhySection() {
   return (
-    <section id="why" data-testid="section-why" className="py-16 md:py-20 relative">
+    <section id="why" data-testid="section-why" className="py-20 md:py-28 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.4 }}
-          className="text-center mb-10"
-        >
-          <Badge variant="secondary" className="mb-3">Why BlackSync</Badge>
-          <h2 className="text-2xl md:text-3xl font-bold tracking-tight mb-3">
-            AI Colleague vs. <span className="gradient-text">Hiring Another Human</span>
-          </h2>
-        </motion.div>
+        <SectionHeading
+          eyebrow="Why BlackSync"
+          title={<>AI Colleague vs. <span className="text-accent-grad">Hiring Another Human</span></>}
+          lead="The same job, done faster, cheaper, and around the clock — with none of the overhead."
+        />
 
-        <div className="grid lg:grid-cols-2 gap-8 items-start">
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.4, delay: 0.08 }}
-          >
-            <div className="rounded-lg border border-border bg-card/50 backdrop-blur-sm">
-              <div className="grid grid-cols-[1fr_auto_auto] items-center gap-3 p-3 border-b border-border text-xs font-medium text-muted-foreground">
-                <span>Capability</span>
-                <span className="text-center w-20">AI</span>
-                <span className="text-center w-20">Human</span>
+        <div className="mt-14 grid lg:grid-cols-2 gap-8 lg:gap-10 items-start">
+          <Reveal delay={0.05}>
+            <div className="overflow-hidden rounded-2xl border border-card-border bg-card shadow-md">
+              <div className="grid grid-cols-[1fr_5rem_5rem] items-center gap-3 px-5 py-4 border-b border-card-border bg-muted/40">
+                <span className="font-mono text-[11px] uppercase tracking-wider text-muted-foreground">
+                  Capability
+                </span>
+                <span className="flex justify-center">
+                  <span className="rounded-full bg-primary px-3 py-1 font-mono text-[11px] uppercase tracking-wider text-primary-foreground font-semibold shadow-sm">
+                    AI
+                  </span>
+                </span>
+                <span className="text-center font-mono text-[11px] uppercase tracking-wider text-muted-foreground">
+                  Human
+                </span>
               </div>
               {comparisonData.map((row, i) => (
                 <div
                   key={row.feature}
-                  className={`grid grid-cols-[1fr_auto_auto] items-center gap-3 px-3 py-2.5 text-sm ${
-                    i < comparisonData.length - 1 ? "border-b border-border/50" : ""
-                  }`}
+                  className={`grid grid-cols-[1fr_5rem_5rem] items-center gap-3 px-5 py-3.5 text-sm ${
+                    i % 2 === 1 ? "bg-muted/20" : ""
+                  } ${i < comparisonData.length - 1 ? "border-b border-card-border/60" : ""}`}
                   data-testid={`comparison-row-${i}`}
                 >
-                  <span className="text-sm">{row.feature}</span>
-                  <span className="flex justify-center w-20">
-                    <CheckCircle className="w-4 h-4 text-emerald-500" />
+                  <span className="font-medium text-foreground/90">{row.feature}</span>
+                  <span className="flex justify-center">
+                    <span className="flex items-center justify-center w-7 h-7 rounded-full bg-primary/10 text-primary">
+                      <Check className="w-4 h-4" strokeWidth={3} />
+                    </span>
                   </span>
-                  <span className="flex justify-center w-20">
-                    <XCircle className="w-4 h-4 text-muted-foreground/40" />
+                  <span className="flex justify-center">
+                    <span className="flex items-center justify-center w-7 h-7 rounded-full bg-muted text-muted-foreground/40">
+                      <X className="w-4 h-4" strokeWidth={2.5} />
+                    </span>
                   </span>
                 </div>
               ))}
             </div>
-          </motion.div>
+          </Reveal>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid sm:grid-cols-2 gap-5">
             {advantages.map((item, index) => (
-              <motion.div
-                key={item.title}
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.3, delay: index * 0.06 }}
-                className="p-4 rounded-lg border border-border/50 bg-card/30"
-                data-testid={`advantage-${index}`}
-              >
-                <div className="w-8 h-8 rounded-md bg-primary/10 text-primary flex items-center justify-center mb-2.5">
-                  <item.icon className="w-4 h-4" />
+              <Reveal key={item.title} delay={index * 0.06}>
+                <div
+                  className="group h-full rounded-2xl border border-card-border bg-card p-6 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition"
+                  data-testid={`advantage-${index}`}
+                >
+                  <div className="w-11 h-11 rounded-xl bg-accent text-accent-foreground flex items-center justify-center mb-4 shadow-sm">
+                    <item.icon className="w-5 h-5" />
+                  </div>
+                  <h3 className="font-display text-base font-semibold tracking-tight mb-1.5">
+                    {item.title}
+                  </h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed text-pretty">
+                    {item.desc}
+                  </p>
                 </div>
-                <h3 className="text-sm font-semibold mb-1">{item.title}</h3>
-                <p className="text-xs text-muted-foreground leading-relaxed">{item.desc}</p>
-              </motion.div>
+              </Reveal>
             ))}
           </div>
         </div>

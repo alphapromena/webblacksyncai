@@ -1,16 +1,16 @@
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { motion } from "framer-motion";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
+import { Eyebrow, Reveal } from "@/components/ui/section";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useMutation } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
+import { useHoneypot, HoneypotInput } from "@/components/ui/honeypot";
 import {
   Form,
   FormControl,
@@ -54,6 +54,7 @@ const bulletPoints = [
 
 export function EnterpriseSection() {
   const { toast } = useToast();
+  const { ref: hpRef, isBot } = useHoneypot();
 
   const form = useForm<EnterpriseForm>({
     resolver: zodResolver(enterpriseSchema),
@@ -96,42 +97,43 @@ export function EnterpriseSection() {
   });
 
   return (
-    <section id="enterprise" data-testid="section-enterprise" className="py-16 md:py-20 relative">
+    <section id="enterprise" data-testid="section-enterprise" className="py-20 md:py-28 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid lg:grid-cols-2 gap-10 lg:gap-14 items-start">
-          <motion.div
-            initial={{ opacity: 0, x: -16 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.4 }}
-          >
-            <Badge variant="secondary" className="mb-3" data-testid="badge-enterprise">Enterprise</Badge>
-            <h2 className="text-2xl md:text-3xl font-bold tracking-tight mb-3" data-testid="text-enterprise-headline">
-              Built for teams that <span className="gradient-text">scale.</span>
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-start">
+          <Reveal className="lg:sticky lg:top-28">
+            <Eyebrow data-testid="badge-enterprise">Enterprise</Eyebrow>
+            <h2 className="mt-5 font-display text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight leading-[1.08] text-balance" data-testid="text-enterprise-headline">
+              Built for teams that <span className="text-accent-grad">scale.</span>
             </h2>
-            <p className="text-muted-foreground text-sm md:text-base mb-6 leading-relaxed" data-testid="text-enterprise-subhead">
+            <p className="mt-4 text-base md:text-lg text-muted-foreground leading-relaxed text-pretty" data-testid="text-enterprise-subhead">
               For brokerages, agencies, and teams that need unlimited capacity, white-glove onboarding, and enterprise-grade infrastructure.
             </p>
-            <div className="space-y-3">
+            <div className="mt-8 space-y-3.5">
               {bulletPoints.map((point, index) => (
                 <div key={index} className="flex items-center gap-3" data-testid={`text-enterprise-bullet-${index}`}>
-                  <CheckCircle2 className="w-4 h-4 text-primary shrink-0" />
-                  <span className="text-sm">{point}</span>
+                  <CheckCircle2 className="w-5 h-5 text-primary shrink-0" />
+                  <span className="text-sm md:text-base text-foreground/90">{point}</span>
                 </div>
               ))}
             </div>
-          </motion.div>
+          </Reveal>
 
-          <motion.div
-            initial={{ opacity: 0, x: 16 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.4, delay: 0.08 }}
-          >
-            <Card className="card-glow">
-              <CardContent className="p-5 md:p-6">
+          <Reveal delay={0.08}>
+            <Card className="card-glow rounded-2xl border bg-card shadow-lg">
+              <CardContent className="p-6 md:p-8">
                 <Form {...form}>
-                  <form onSubmit={form.handleSubmit((d) => mutation.mutate(d))} className="space-y-4">
+                  <form
+                    onSubmit={form.handleSubmit((d) => {
+                      if (isBot()) {
+                        toast({ title: "Got it!", description: "We'll be in touch within 24 hours." });
+                        form.reset();
+                        return;
+                      }
+                      mutation.mutate(d);
+                    })}
+                    className="space-y-4"
+                  >
+                    <HoneypotInput inputRef={hpRef} />
                     <div className="grid grid-cols-2 gap-4">
                       <FormField
                         control={form.control}
@@ -326,7 +328,7 @@ export function EnterpriseSection() {
                 </Form>
               </CardContent>
             </Card>
-          </motion.div>
+          </Reveal>
         </div>
       </div>
     </section>

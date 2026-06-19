@@ -1,4 +1,4 @@
-import { Switch, Route } from "wouter";
+import { Switch, Route, Router as WouterRouter } from "wouter";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
@@ -14,8 +14,13 @@ import PrivacyPage from "@/pages/privacy";
 import TermsPage from "@/pages/terms";
 import IndustryPage from "@/pages/industry";
 
+// On GitHub Pages the app is served from a sub-path (e.g. /webblacksyncai/).
+// Vite sets BASE_URL accordingly; locally and on the real domain it's "/".
+const ROUTER_BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
+
 function Router() {
   return (
+    <WouterRouter base={ROUTER_BASE}>
     <Switch>
       <Route path="/" component={Home} />
       <Route path="/pricing" component={PricingPage} />
@@ -27,6 +32,7 @@ function Router() {
       <Route path="/industry/:slug" component={IndustryPage} />
       <Route component={NotFound} />
     </Switch>
+    </WouterRouter>
   );
 }
 

@@ -37,11 +37,11 @@ export function Footer() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           <div className="col-span-2 md:col-span-1">
-            <a href="#" className="flex items-center gap-2 mb-4" data-testid="link-footer-home">
-              <div className="w-7 h-7 rounded-md bg-gradient-to-br from-primary to-amber-800 dark:to-amber-600 flex items-center justify-center">
-                <span className="text-white font-bold text-xs">B</span>
+            <a href="#" className="flex items-center gap-2.5 mb-4" data-testid="link-footer-home">
+              <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-primary via-orange-500 to-amber-500 flex items-center justify-center shadow-sm ring-1 ring-black/5">
+                <span className="text-white font-display font-bold text-sm">B</span>
               </div>
-              <span className="font-bold text-base tracking-tight">BlackSync</span>
+              <span className="font-display font-bold text-base tracking-tight">BlackSync</span>
             </a>
             <p className="text-sm text-muted-foreground leading-relaxed mb-3" data-testid="text-footer-tagline">
               AI outbound agents for sales teams.
@@ -60,7 +60,7 @@ export function Footer() {
                     <a
                       href={link.href}
                       data-testid={`link-footer-${link.label.toLowerCase().replace(/\s+/g, "-")}`}
-                      className="text-sm text-muted-foreground transition-colors"
+                      className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                     >
                       {link.label}
                     </a>

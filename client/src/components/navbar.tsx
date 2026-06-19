@@ -39,6 +39,8 @@ import {
   Search,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { StartTrialDialog } from "@/components/start-trial-dialog";
+import { BOOK_CALL_URL } from "@/lib/register";
 
 type MegaColumn = {
   heading: string;
@@ -247,18 +249,18 @@ export function Navbar() {
       data-testid="navbar"
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled || openMenu
-          ? "bg-background/95 backdrop-blur-xl border-b border-border/50"
+          ? "bg-background/80 backdrop-blur-xl border-b border-border shadow-[0_1px_0_0_hsl(var(--border))]"
           : "bg-transparent"
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between gap-6 h-16">
-          <a href="#" className="flex items-center gap-2 shrink-0" data-testid="link-home">
-            <div className="w-8 h-8 rounded-md bg-gradient-to-br from-primary to-amber-800 dark:to-amber-600 flex items-center justify-center">
-              <span className="text-white font-bold text-sm">B</span>
+          <a href="#" className="flex items-center gap-2.5 shrink-0 group" data-testid="link-home">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary via-orange-500 to-amber-500 flex items-center justify-center shadow-sm ring-1 ring-black/5 transition-transform duration-300 group-hover:scale-105">
+              <span className="text-white font-display font-bold text-base">B</span>
             </div>
-            <span className="font-bold text-lg tracking-tight">
-              Black<span className="gradient-text">Sync</span>
+            <span className="font-display font-bold text-lg tracking-tight">
+              Black<span className="text-accent-grad">Sync</span>
             </span>
           </a>
 
@@ -311,17 +313,28 @@ export function Navbar() {
               {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
             </Button>
 
-            <a href="#contact">
-              <Button variant="ghost" size="sm" data-testid="button-talk-sales">
-                Talk to Sales
+            <a
+              href="https://ai.blacksync.network/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hidden sm:inline-flex"
+            >
+              <Button variant="ghost" size="sm" data-testid="button-login">
+                Log in
               </Button>
             </a>
 
-            <a href="#contact">
-              <Button size="sm" data-testid="button-get-started">
-                Get Started
+            <a href={BOOK_CALL_URL} target="_blank" rel="noopener noreferrer" className="hidden sm:inline-flex">
+              <Button variant="ghost" size="sm" data-testid="button-talk-sales">
+                Book a Call
               </Button>
             </a>
+
+            <StartTrialDialog>
+              <Button size="sm" data-testid="button-get-started">
+                Start Free
+              </Button>
+            </StartTrialDialog>
 
             <Button
               size="icon"
@@ -552,17 +565,31 @@ export function Navbar() {
                 </a>
               ))}
 
-              <div className="flex gap-2 mt-4 px-2">
-                <a href="#contact" onClick={() => setMobileOpen(false)} className="flex-1">
+              <a
+                href="https://ai.blacksync.network/"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setMobileOpen(false)}
+                className="block mt-4 px-2"
+                data-testid="link-mobile-login"
+              >
+                <Button variant="ghost" className="w-full justify-start" size="sm">
+                  Log in
+                </Button>
+              </a>
+              <div className="flex gap-2 mt-2 px-2">
+                <a href={BOOK_CALL_URL} target="_blank" rel="noopener noreferrer" onClick={() => setMobileOpen(false)} className="flex-1">
                   <Button variant="outline" className="w-full" size="sm">
-                    Talk to Sales
+                    Book a Call
                   </Button>
                 </a>
-                <a href="#contact" onClick={() => setMobileOpen(false)} className="flex-1">
-                  <Button className="w-full" size="sm">
-                    Get Started
-                  </Button>
-                </a>
+                <div className="flex-1">
+                  <StartTrialDialog onOpen={() => setMobileOpen(false)}>
+                    <Button className="w-full" size="sm">
+                      Start Free
+                    </Button>
+                  </StartTrialDialog>
+                </div>
               </div>
             </div>
           </motion.div>
