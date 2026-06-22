@@ -11,7 +11,7 @@ async function throwIfResNotOk(res: Response) {
 // forms work on any static host with no backend. Override per-environment with
 // VITE_LEADS_WEBHOOK_URL (e.g. to point at Zapier/Make or a different CRM).
 const DEFAULT_LEADS_WEBHOOK_URL =
-  "https://services.leadconnectorhq.com/hooks/0LKIRgZlaDDW51j4Uzd5/webhook-trigger/91b7c2b2-45fe-45cb-b90a-77d9a37a42a1";
+  "https://services.leadconnectorhq.com/hooks/0LKIRgZlaDDW51j4Uzd5/webhook-trigger/p45rHqz5K4mSyoFZh2iY";
 
 const LEADS_WEBHOOK_URL =
   (import.meta.env.VITE_LEADS_WEBHOOK_URL as string | undefined) ||
