@@ -19,6 +19,9 @@ const LEADS_WEBHOOK_URL =
 
 const LEAD_ENDPOINTS = ["/api/leads", "/api/enterprise-leads"];
 
+// Web3Forms public access key → emails every submission to admin@blacksync.network.
+const WEB3FORMS_ACCESS_KEY = "7bd3edd1-dcf9-4041-9fff-14161cf49bbf";
+
 // Normalize a lead payload so CRMs that expect first/last name + email + phone
 // (like GoHighLevel "Create Contact") map cleanly regardless of which form sent it.
 function normalizeLead(url: string, data: any) {
@@ -40,21 +43,38 @@ export async function apiRequest(
   url: string,
   data?: unknown | undefined,
 ): Promise<Response> {
-  // Route lead submissions to the CRM webhook when configured (static-host friendly).
-  if (
-    LEADS_WEBHOOK_URL &&
-    method.toUpperCase() === "POST" &&
-    LEAD_ENDPOINTS.includes(url)
-  ) {
-    // no-cors: webhook providers don't return CORS headers; the POST still
-    // delivers (GHL parses the JSON body). We can't read the response, so we
-    // treat delivery as success. (Content-Type is dropped in no-cors mode.)
-    await fetch(LEADS_WEBHOOK_URL, {
-      method: "POST",
-      body: JSON.stringify(normalizeLead(url, data)),
-      mode: "no-cors",
-      keepalive: true,
-    });
+  // Route lead submissions to email (Web3Forms → admin@blacksync.network) and,
+  // if configured, the GHL CRM webhook. Static-host friendly (no backend).
+  if (method.toUpperCase() === "POST" && LEAD_ENDPOINTS.includes(url)) {
+    const lead = normalizeLead(url, data);
+
+    // 1) GoHighLevel inbound webhook — fire-and-forget (opaque/no-cors).
+    if (LEADS_WEBHOOK_URL) {
+      fetch(LEADS_WEBHOOK_URL, {
+        method: "POST",
+        body: JSON.stringify(lead),
+        mode: "no-cors",
+        keepalive: true,
+      }).catch(() => {});
+    }
+
+    // 2) Web3Forms — emails every submission to admin@blacksync.network.
+    try {
+      await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({
+          access_key: WEB3FORMS_ACCESS_KEY,
+          subject: `New ${lead.formType || "website"} lead — ${lead.fullName || lead.email}`,
+          from_name: "BlackSync Website",
+          ...lead,
+        }),
+        keepalive: true,
+      });
+    } catch {
+      /* email send is best-effort; never block the user */
+    }
+
     return new Response(null, { status: 200 });
   }
 
