@@ -59,18 +59,16 @@ export async function apiRequest(
     }
 
     // 2) Web3Forms — emails every submission to admin@blacksync.network.
+    // FormData (multipart) is a "simple" request: no CORS preflight, most reliable.
     try {
-      await fetch("https://api.web3forms.com/submit", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", Accept: "application/json" },
-        body: JSON.stringify({
-          access_key: WEB3FORMS_ACCESS_KEY,
-          subject: `New ${lead.formType || "website"} lead — ${lead.fullName || lead.email}`,
-          from_name: "BlackSync Website",
-          ...lead,
-        }),
-        keepalive: true,
+      const fd = new FormData();
+      fd.append("access_key", WEB3FORMS_ACCESS_KEY);
+      fd.append("subject", `New ${lead.formType || "website"} lead — ${lead.fullName || lead.email}`);
+      fd.append("from_name", "BlackSync Website");
+      Object.entries(lead).forEach(([k, v]) => {
+        if (v !== undefined && v !== null && v !== "") fd.append(k, String(v));
       });
+      await fetch("https://api.web3forms.com/submit", { method: "POST", body: fd });
     } catch {
       /* email send is best-effort; never block the user */
     }
